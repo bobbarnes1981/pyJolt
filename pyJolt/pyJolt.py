@@ -7,10 +7,9 @@ class pyJolt(wx.Frame):
     def __init__(self, *args, **kw):
         super(pyJolt, self).__init__(*args, **kw)
 
-        self.createMenu()
+        self.createMenus()
 
-        toolBar = self.CreateToolBar()
-        #toolBar.CreateTool()
+        self.createTools()
 
         self.CreateStatusBar()
 
@@ -20,13 +19,56 @@ class pyJolt(wx.Frame):
         conf = megajolt.Configuration()
         self.configPanel.setConfiguration(conf)
 
-    def createMenu(self):
+    def createTools(self):
+        emptyBitmap = wx.EmptyBitmap(16, 15, 16)
+        #wx.Bitmap('')
+
+        toolBar = self.CreateToolBar()
+
+        newConfigItem = toolBar.AddLabelTool(-1, 'New Ignition Configuration', emptyBitmap, wx.NullBitmap)
+        self.Bind(wx.EVT_TOOL, self.onNewConfig, newConfigItem)
+
+        openConfigItem = toolBar.AddLabelTool(-1, 'Open', emptyBitmap, wx.NullBitmap)
+        self.Bind(wx.EVT_TOOL, self.onOpenConfig, openConfigItem)
+
+        toolBar.AddSeparator()
+
+        saveConfigItem = toolBar.AddLabelTool(-1, 'Save', emptyBitmap, wx.NullBitmap)
+        saveConfigItem.Enable(False)
+        self.Bind(wx.EVT_TOOL, self.onSaveConfig, saveConfigItem)
+
+        saveAsConfigItem = toolBar.AddLabelTool(-1, 'Save As', emptyBitmap, wx.NullBitmap)
+        self.Bind(wx.EVT_TOOL, self.onSaveAsConfig, saveAsConfigItem)
+
+        toolBar.AddSeparator()
+
+        getConfigItem = toolBar.AddLabelTool(-1, 'Get Ignition Configuration', emptyBitmap, wx.NullBitmap)
+        self.Bind(wx.EVT_TOOL, self.onGetConfig, getConfigItem)
+
+        writeConfigItem = toolBar.AddLabelTool(-1, 'Write Ignition Configuration', emptyBitmap, wx.NullBitmap)
+        self.Bind(wx.EVT_TOOL, self.onWriteConfig, writeConfigItem)
+
+        commitConfigItem = toolBar.AddLabelTool(-1, 'Commit Configuration to Flash', emptyBitmap, wx.NullBitmap)
+        self.Bind(wx.EVT_TOOL, self.onCommitConfig, commitConfigItem)
+
+        toolBar.AddSeparator()
+
+        editConfigItem = toolBar.AddLabelTool(-1, 'Edit Ignition Configuration', emptyBitmap, wx.NullBitmap)
+        self.Bind(wx.EVT_TOOL, self.onConfigPerspective, editConfigItem)
+
+        runtimeItem = toolBar.AddLabelTool(-1, 'Charting/Runtime View', emptyBitmap, wx.NullBitmap)
+        self.Bind(wx.EVT_TOOL, self.onRuntimePerspective, runtimeItem)
+
+        tuningItem = toolBar.AddLabelTool(-1, 'Tuning', emptyBitmap, wx.NullBitmap)
+        self.Bind(wx.EVT_TOOL, self.onTuningPerspective, tuningItem)
+
+    def createMenus(self):
         fileMenu = self.createFileMenu()
         editMenu = self.createEditMenu()
         toolsMenu = self.createToolsMenu()
         viewMenu = wx.Menu()
         perspectiveMenu = self.createPerspectiveMenu()
-        helpMenu = wx.Menu()
+        helpMenu = self.createHelpMenu()
 
         menuBar = wx.MenuBar()
         menuBar.Append(fileMenu, "File")
@@ -41,16 +83,17 @@ class pyJolt(wx.Frame):
     def createFileMenu(self):
         fileMenu = wx.Menu()
         
-        fileMenu.Append(-1, "New")
+        newConfigItem = fileMenu.Append(-1, "New")
+        self.Bind(wx.EVT_MENU, self.onNewConfig, newConfigItem)
         
         openItem = fileMenu.Append(-1, "Open")
-        self.Bind(wx.EVT_MENU, self.onOpen, openItem)
+        self.Bind(wx.EVT_MENU, self.onOpenConfig, openItem)
 
         fileMenu.AppendSeparator()
         fileMenu.Append(-1, "Save")
 
         saveAsItem = fileMenu.Append(-1, "Save As")
-        self.Bind(wx.EVT_MENU, self.onSaveAs, saveAsItem)
+        self.Bind(wx.EVT_MENU, self.onSaveAsConfig, saveAsItem)
         
         fileMenu.AppendSeparator()
         fileMenu.Append(-1, "Quick Datalog")
@@ -105,6 +148,17 @@ class pyJolt(wx.Frame):
 
         return perspectiveMenu
 
+    def createHelpMenu(self):
+        helpMenu = wx.Menu()
+
+        helpItem = helpMenu.Append(-1, "About pyJolt")
+        self.Bind(wx.EVT_MENU, self.onAbout, helpItem)
+
+        return helpMenu
+
+    def onNewConfig(self, menuEvent):
+        pass
+
     def onConfigPerspective(self, menuEvent):
         pass
 
@@ -129,14 +183,26 @@ class pyJolt(wx.Frame):
     def onEditBins(self, menuEvent):
         pass
 
-    def onOpen(self, menuEvent):
+    def onOpenConfig(self, menuEvent):
         with wx.FileDialog(self, "Open Ignition Configuration", wildcard="MJLJ Configuration Files (*.mjlj)|*.mjlj", style=wx.FD_OPEN | wx.FD_FILE_MUST_EXIST) as fileDialog:
             if fileDialog.ShowModal() == wx.ID_CANCEL:
                 return
 
             pathname = fileDialog.GetPath()
 
-    def onSaveAs(self, menuEvent):
+    def onSaveConfig(self, menuEvent):
+        pass
+
+    def onGetConfig(self, menuEvent):
+        pass
+
+    def onWriteConfig(self, menuEvent):
+        pass
+
+    def onCommitConfig(self, menuEvent):
+        pass
+
+    def onSaveAsConfig(self, menuEvent):
         with wx.FileDialog(self, "Save As Ignition Configuration", wildcard="MJLJ Configuration Files (*.mjlj)|*.mjlj", style=wx.FD_SAVE | wx.FD_OVERWRITE_PROMPT) as fileDialog:
             if fileDialog.ShowModal() == wx.ID_CANCEL:
                 return
@@ -146,3 +212,5 @@ class pyJolt(wx.Frame):
     def onExit(self, menuEvent):
         self.Close(True)
 
+    def onAbout(self, menuEvent):
+        pass
