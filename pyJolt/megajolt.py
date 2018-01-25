@@ -24,6 +24,12 @@ class Configuration():
         self.shiftLight = 55
         self.revLimit = 60
 
+    def save(self, filename):
+        pass
+
+    def load(self, filename):
+        pass
+
 class UserOut():
 
     def __init__(self, type, mode, value):

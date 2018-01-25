@@ -1,5 +1,7 @@
 import wx
 import configurationpanel
+import runtimepanel
+import tuningpanel
 import megajolt
 
 class pyJolt(wx.Frame):
@@ -13,11 +15,52 @@ class pyJolt(wx.Frame):
 
         self.CreateStatusBar()
 
+        #tabsNb = wx.Notebook(self)
+
         self.configPanel = configurationpanel.ConfigurationPanel(self)
+        self.configPanel.Hide()
+        self.runtimePanel = runtimepanel.RuntimePanel(self)
+        self.runtimePanel.Hide()
+        self.tuningPanel = tuningpanel.TuningPanel(self)
+        self.tuningPanel.Hide()
+
+        sizer = wx.BoxSizer()
+        sizer.Add(self.configPanel, 1, wx.EXPAND)
+        sizer.Add(self.runtimePanel, 1, wx.EXPAND)
+        sizer.Add(self.tuningPanel, 1, wx.EXPAND)
+        self.SetSizer(sizer)
+
+        #tabsNb.AddPage(self.configPanel, "Configuration Panel")
+        #tabsNb.AddPage(self.runtimePanel, "Runtime Panel")
+        #tabsNb.AddPage(self.tuningPanel, "Tuning Panel")
+        
+        #tabsNb.EnableTab(1, False)
+
+        #sizer = wx.BoxSizer()
+        #sizer.Add(tabsNb, 1, wx.EXPAND)
+        #self.SetSizer(sizer)
+
+        self.showConfigPanel()
 
         # TODO: create default config
-        conf = megajolt.Configuration()
-        self.configPanel.setConfiguration(conf)
+        self.filepath = None
+        self.conf = megajolt.Configuration()
+        self.configPanel.setConfiguration(self.conf)
+
+    def showConfigPanel(self):
+        self.configPanel.Show()
+        self.runtimePanel.Hide()
+        self.tuningPanel.Hide()
+        
+    def showRuntimePanel(self):
+        self.configPanel.Hide()
+        self.runtimePanel.Show()
+        self.tuningPanel.Hide()
+
+    def showTuningPanel(self):
+        self.configPanel.Hide()
+        self.runtimePanel.Hide()
+        self.tuningPanel.Show()
 
     def createTools(self):
         emptyBitmap = wx.EmptyBitmap(16, 15, 16)
@@ -160,13 +203,13 @@ class pyJolt(wx.Frame):
         pass
 
     def onConfigPerspective(self, menuEvent):
-        pass
+        self.showConfigPanel()
 
     def onRuntimePerspective(self, menuEvent):
-        pass
+        self.showRuntimePanel()
 
     def onTuningPerspective(self, menuEvent):
-        pass
+        self.showTuningPanel()
 
     def onConfiguratorOptions(self, menuEvent):
         pass
@@ -188,10 +231,14 @@ class pyJolt(wx.Frame):
             if fileDialog.ShowModal() == wx.ID_CANCEL:
                 return
 
-            pathname = fileDialog.GetPath()
+            self.filepath = fileDialog.GetPath()
+        newConf = configuration.Configuration()
+        newConf.load(self.filepath)
+        self.conf = newConf
+        self.configPanel.setConfiguration(self.conf)
 
     def onSaveConfig(self, menuEvent):
-        pass
+        self.conf.save(self.filepath)
 
     def onGetConfig(self, menuEvent):
         pass
@@ -207,7 +254,9 @@ class pyJolt(wx.Frame):
             if fileDialog.ShowModal() == wx.ID_CANCEL:
                 return
 
-            pathname = fileDialog.GetPath()
+            self.filepath = fileDialog.GetPath()
+        self.conf.save(self.filepath)
+
 
     def onExit(self, menuEvent):
         self.Close(True)
