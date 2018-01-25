@@ -23,9 +23,9 @@ class pyJolt(wx.Frame):
     def createMenu(self):
         fileMenu = self.createFileMenu()
         editMenu = self.createEditMenu()
-        toolsMenu = wx.Menu()
+        toolsMenu = self.createToolsMenu()
         viewMenu = wx.Menu()
-        perspectiveMenu = wx.Menu()
+        perspectiveMenu = self.createPerspectiveMenu()
         helpMenu = wx.Menu()
 
         menuBar = wx.MenuBar()
@@ -74,7 +74,59 @@ class pyJolt(wx.Frame):
 
         return editMenu
 
-    def onEditBins(self):
+    def createToolsMenu(self):
+        toolsMenu = wx.Menu()
+
+        configuratorItem = toolsMenu.Append(-1, "Configurator Options")
+        self.Bind(wx.EVT_MENU, self.onConfiguratorOptions, configuratorItem)
+
+        controllerItem = toolsMenu.Append(-1, "Global Controller Options")
+        self.Bind(wx.EVT_MENU, self.onControllerOptions, controllerItem)
+
+        axisCalItem = toolsMenu.Append(-1, "Load Axis Calibration")
+        self.Bind(wx.EVT_MENU, self.onAxisCalibration, axisCalItem)
+
+        auxInputItem = toolsMenu.Append(-1, "Auxiliary Input Options")
+        self.Bind(wx.EVT_MENU, self.onAuxInputOptions, auxInputItem)
+
+        return toolsMenu
+
+    def createPerspectiveMenu(self):
+        perspectiveMenu = wx.Menu()
+
+        configItem = perspectiveMenu.Append(-1, "Configuration")
+        self.Bind(wx.EVT_MENU, self.onConfigPerspective, configItem)
+
+        runtimeItem = perspectiveMenu.Append(-1, "Runtime")
+        self.Bind(wx.EVT_MENU, self.onRuntimePerspective, runtimeItem)
+
+        tuningItem = perspectiveMenu.Append(-1, "Tuning")
+        self.Bind(wx.EVT_MENU, self.onTuningPerspective, tuningItem)
+
+        return perspectiveMenu
+
+    def onConfigurationPerspective(self, menuEvent):
+        pass
+
+    def onRuntimePerspective(self, menuEvent):
+        pass
+
+    def onTuningPerspective(self, menuEvent):
+        pass
+
+    def onConfiguratorOptions(self, menuEvent):
+        pass
+
+    def onControllerOptions(self, menuEvent):
+        pass
+
+    def onAxisCalibration(self, menuEvent):
+        pass
+
+    def onAuxInputOptions(self, menuEvent):
+        pass
+
+    def onEditBins(self, menuEvent):
         pass
 
     def onOpen(self, menuEvent):
