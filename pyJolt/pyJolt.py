@@ -50,47 +50,53 @@ class pyJolt(wx.Frame):
         self.runtimePanel.Hide()
         self.tuningPanel.Show()
 
+    def updateTitle(self):
+        if not self.filepath:
+            self.SetTitle('pyJolt - No File Loaded')
+        else:
+            self.SetTitle('pyJolt - ' + self.filepath)
+
     def createTools(self):
         emptyBitmap = wx.EmptyBitmap(16, 15, 16)
         #wx.Bitmap('')
 
         toolBar = self.CreateToolBar()
 
-        newConfigItem = toolBar.AddLabelTool(-1, 'New Ignition Configuration', emptyBitmap, wx.NullBitmap)
+        newConfigItem = toolBar.AddLabelTool(-1, 'New Ignition Configuration', emptyBitmap, wx.NullBitmap, shortHelp='New Ignition Configuration')
         self.Bind(wx.EVT_TOOL, self.onNewConfig, newConfigItem)
 
-        openConfigItem = toolBar.AddLabelTool(-1, 'Open', emptyBitmap, wx.NullBitmap)
+        openConfigItem = toolBar.AddLabelTool(-1, 'Open', emptyBitmap, wx.NullBitmap, shortHelp='Open')
         self.Bind(wx.EVT_TOOL, self.onOpenConfig, openConfigItem)
 
         toolBar.AddSeparator()
 
-        saveConfigItem = toolBar.AddLabelTool(-1, 'Save', emptyBitmap, wx.NullBitmap)
+        saveConfigItem = toolBar.AddLabelTool(-1, 'Save', emptyBitmap, wx.NullBitmap, shortHelp='Save')
         saveConfigItem.Enable(False)
         self.Bind(wx.EVT_TOOL, self.onSaveConfig, saveConfigItem)
 
-        saveAsConfigItem = toolBar.AddLabelTool(-1, 'Save As', emptyBitmap, wx.NullBitmap)
+        saveAsConfigItem = toolBar.AddLabelTool(-1, 'Save As', emptyBitmap, wx.NullBitmap,shortHelp='Save As')
         self.Bind(wx.EVT_TOOL, self.onSaveAsConfig, saveAsConfigItem)
 
         toolBar.AddSeparator()
 
-        getConfigItem = toolBar.AddLabelTool(-1, 'Get Ignition Configuration', emptyBitmap, wx.NullBitmap)
+        getConfigItem = toolBar.AddLabelTool(-1, 'Get Ignition Configuration', emptyBitmap, wx.NullBitmap, shortHelp='Get Ignition Configuration')
         self.Bind(wx.EVT_TOOL, self.onGetConfig, getConfigItem)
 
-        writeConfigItem = toolBar.AddLabelTool(-1, 'Write Ignition Configuration', emptyBitmap, wx.NullBitmap)
+        writeConfigItem = toolBar.AddLabelTool(-1, 'Write Ignition Configuration', emptyBitmap, wx.NullBitmap, shortHelp='Write Ignition Configuration')
         self.Bind(wx.EVT_TOOL, self.onWriteConfig, writeConfigItem)
 
-        commitConfigItem = toolBar.AddLabelTool(-1, 'Commit Configuration to Flash', emptyBitmap, wx.NullBitmap)
+        commitConfigItem = toolBar.AddLabelTool(-1, 'Commit Configuration to Flash', emptyBitmap, wx.NullBitmap, shortHelp='Commit Configuration to Flash')
         self.Bind(wx.EVT_TOOL, self.onCommitConfig, commitConfigItem)
 
         toolBar.AddSeparator()
 
-        editConfigItem = toolBar.AddLabelTool(-1, 'Edit Ignition Configuration', emptyBitmap, wx.NullBitmap)
+        editConfigItem = toolBar.AddLabelTool(-1, 'Edit Ignition Configuration', emptyBitmap, wx.NullBitmap, shortHelp='Edit Ignition Configuration')
         self.Bind(wx.EVT_TOOL, self.onConfigPerspective, editConfigItem)
 
-        runtimeItem = toolBar.AddLabelTool(-1, 'Charting/Runtime View', emptyBitmap, wx.NullBitmap)
+        runtimeItem = toolBar.AddLabelTool(-1, 'Charting/Runtime View', emptyBitmap, wx.NullBitmap, shortHelp='Charting/Runtime View')
         self.Bind(wx.EVT_TOOL, self.onRuntimePerspective, runtimeItem)
 
-        tuningItem = toolBar.AddLabelTool(-1, 'Tuning', emptyBitmap, wx.NullBitmap)
+        tuningItem = toolBar.AddLabelTool(-1, 'Tuning', emptyBitmap, wx.NullBitmap, shortHelp='Tuning')
         self.Bind(wx.EVT_TOOL, self.onTuningPerspective, tuningItem)
 
     def createMenus(self):
@@ -188,7 +194,12 @@ class pyJolt(wx.Frame):
         return helpMenu
 
     def onNewConfig(self, menuEvent):
-        pass
+        newConf = megajolt.Configuration()
+
+        self.filepath = None
+        self.updateTitle()
+        self.conf = newConf
+        self.configPanel.setConfiguration(self.conf)
 
     def onConfigPerspective(self, menuEvent):
         self.showConfigPanel()
@@ -219,9 +230,12 @@ class pyJolt(wx.Frame):
             if fileDialog.ShowModal() == wx.ID_CANCEL:
                 return
 
-            self.filepath = fileDialog.GetPath()
-        newConf = configuration.Configuration()
-        newConf.load(self.filepath)
+            filepath = fileDialog.GetPath()
+        newConf = megajolt.Configuration()
+        newConf.load(filepath)
+
+        self.filepath = filepath
+        self.updateTitle()
         self.conf = newConf
         self.configPanel.setConfiguration(self.conf)
 
