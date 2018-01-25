@@ -105,7 +105,7 @@ class pyJolt(wx.Frame):
 
         return perspectiveMenu
 
-    def onConfigurationPerspective(self, menuEvent):
+    def onConfigPerspective(self, menuEvent):
         pass
 
     def onRuntimePerspective(self, menuEvent):
