@@ -15,8 +15,6 @@ class pyJolt(wx.Frame):
 
         self.CreateStatusBar()
 
-        #tabsNb = wx.Notebook(self)
-
         self.configPanel = configurationpanel.ConfigurationPanel(self)
         self.configPanel.Hide()
         self.runtimePanel = runtimepanel.RuntimePanel(self)
@@ -29,16 +27,6 @@ class pyJolt(wx.Frame):
         sizer.Add(self.runtimePanel, 1, wx.EXPAND)
         sizer.Add(self.tuningPanel, 1, wx.EXPAND)
         self.SetSizer(sizer)
-
-        #tabsNb.AddPage(self.configPanel, "Configuration Panel")
-        #tabsNb.AddPage(self.runtimePanel, "Runtime Panel")
-        #tabsNb.AddPage(self.tuningPanel, "Tuning Panel")
-        
-        #tabsNb.EnableTab(1, False)
-
-        #sizer = wx.BoxSizer()
-        #sizer.Add(tabsNb, 1, wx.EXPAND)
-        #self.SetSizer(sizer)
 
         self.showConfigPanel()
 
