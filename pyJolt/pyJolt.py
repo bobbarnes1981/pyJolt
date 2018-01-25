@@ -21,6 +21,24 @@ class pyJolt(wx.Frame):
         self.configPanel.setConfiguration(conf)
 
     def createMenu(self):
+        fileMenu = self.createFileMenu()
+        editMenu = self.createEditMenu()
+        toolsMenu = wx.Menu()
+        viewMenu = wx.Menu()
+        perspectiveMenu = wx.Menu()
+        helpMenu = wx.Menu()
+
+        menuBar = wx.MenuBar()
+        menuBar.Append(fileMenu, "File")
+        menuBar.Append(editMenu, "Edit")
+        menuBar.Append(toolsMenu, "Tools")
+        menuBar.Append(viewMenu, "View")
+        menuBar.Append(perspectiveMenu, "Perspective")
+        menuBar.Append(helpMenu, "Help")
+
+        self.SetMenuBar(menuBar)
+
+    def createFileMenu(self):
         fileMenu = wx.Menu()
         
         fileMenu.Append(-1, "New")
@@ -46,21 +64,18 @@ class pyJolt(wx.Frame):
         exitItem = fileMenu.Append(wx.ID_EXIT)
         self.Bind(wx.EVT_MENU, self.onExit, exitItem)
 
+        return fileMenu
+
+    def createEditMenu(self):
         editMenu = wx.Menu()
-        toolsMenu = wx.Menu()
-        viewMenu = wx.Menu()
-        perspectiveMenu = wx.Menu()
-        helpMenu = wx.Menu()
 
-        menuBar = wx.MenuBar()
-        menuBar.Append(fileMenu, "File")
-        menuBar.Append(editMenu, "Edit")
-        menuBar.Append(toolsMenu, "Tools")
-        menuBar.Append(viewMenu, "View")
-        menuBar.Append(perspectiveMenu, "Perspective")
-        menuBar.Append(helpMenu, "Help")
+        editBinsItem = editMenu.Append(-1, "Edit RPM and Load Bins")
+        self.Bind(wx.EVT_MENU, self.onEditBins, editBinsItem)
 
-        self.SetMenuBar(menuBar)
+        return editMenu
+
+    def onEditBins(self):
+        pass
 
     def onOpen(self, menuEvent):
         with wx.FileDialog(self, "Open Ignition Configuration", wildcard="MJLJ Configuration Files (*.mjlj)|*.mjlj", style=wx.FD_OPEN | wx.FD_FILE_MUST_EXIST) as fileDialog:
