@@ -30,7 +30,6 @@ class pyJolt(wx.Frame):
 
         self.showConfigPanel()
 
-        # TODO: create default config
         self.filepath = None
         self.conf = megajolt.Configuration()
         self.configPanel.setConfiguration(self.conf)
