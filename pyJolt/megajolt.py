@@ -2,9 +2,9 @@
 class Configuration():
 
     def __init__(self):
-        self.cylinders = 0
-        self.mapBins = [0,0,0,0,0,0,0,0,0,0]
-        self.rpmBins = [0,0,0,0,0,0,0,0,0,0]
+        self.cylinders = 4
+        self.mapBins = [10,20,30,40,50,60,70,80,90,100]
+        self.rpmBins = [5,15,25,35,45,55,65,75,85,95]
         self.advance = [
             [0,0,0,0,0,0,0,0,0,0],
             [0,0,0,0,0,0,0,0,0,0],
@@ -21,13 +21,13 @@ class Configuration():
         self.correctionValues = [0,0,0,0,0,0,0,0,0,0]
         self.correctionPeakHold = 0
         self.userOut = [
-            UserOut(0, 0, 0),
-            UserOut(0, 0, 0),
-            UserOut(0, 0, 0),
-            UserOut(0, 0, 0)
+            UserOut(1, 0, 10),
+            UserOut(1, 0, 10),
+            UserOut(1, 0, 10),
+            UserOut(1, 0, 10)
         ]
-        self.shiftLight = 0
-        self.revLimit = 0
+        self.shiftLight = 55 
+        self.revLimit = 60
         self.dirty = False
 
     def save(self, filename):
@@ -36,6 +36,9 @@ class Configuration():
         data += "rpmBins={0}\r\n".format(','.join(str(x) for x in self.rpmBins))
         for i in range(0, 10):
             data += "advance{0}={1}\r\n".format(str(i), ','.join(str(x) for x in self.advance[i]))
+        data += "correctionBins={0}\r\n".format(','.join(str(x) for x in self.correctionBins))
+        data += "correctionValues={0}\r\n".format(','.join(str(x) for x in self.correctionValues))
+        data += "correctionPeakHold={0}\r\n".format(self.correctionPeakHold)
         for i in range(0, 4):
             u = self.userOut[i]
             data += "userOutType{0}={1}\r\nuserOutMode{0}={2}\r\nuserOutValue{0}={3}\r\n".format(str(i), str(u.type), str(u.mode), str(u.value))

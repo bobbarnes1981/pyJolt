@@ -145,11 +145,11 @@ class TabIgnitionMap(wx.Panel):
             self.grid.SetRowLabelValue(r, str(self.conf.mapBins[r]))
 
         for c in range(0, self.colCells):
-            self.grid.SetColLabelValue(c, str(self.conf.rpmBins[c]))
+            self.grid.SetColLabelValue(c, str(self.conf.rpmBins[c])+'00')
 
         for r in range(0, self.rowCells):
             for c in range(0, self.colCells):
-                adv = self.conf.advance[self.rowCells-r-1][c]
+                adv = self.conf.advance[r][c]
                 self.grid.SetCellValue(r, c, str(adv))
                 self.updateGridCellColour(r, c, adv)
 
@@ -300,7 +300,7 @@ class UserOutPanel(wx.Panel):
         self.modeCombo = wx.ComboBox(self, -1, value=self.modes[0], pos=(145,0), choices=self.modes, style=wx.CB_READONLY)
         self.Bind(wx.EVT_COMBOBOX, self.onModeChanged, self.modeCombo)
 
-        self.valueSpin = wx.SpinCtrl(self, -1, pos=(240,0), min=0, max=100, initial=0)
+        self.valueSpin = wx.SpinCtrl(self, -1, pos=(240,0), min=0, max=10000, initial=0)
         self.Bind(wx.EVT_SPINCTRL, self.onSpinCtrl, self.valueSpin)
     
     def setConfiguration(self, conf):
@@ -310,16 +310,37 @@ class UserOutPanel(wx.Panel):
 
         self.typeCombo.SetValue(self.types[userOut.type])
         self.modeCombo.SetValue(self.modes[userOut.mode])
-        self.valueSpin.SetValue(userOut.value)
+        val = userOut.value
+        if userOut.type == 1:
+            # RPM is displayed as multiples of 100
+            val = val * 100
+        self.valueSpin.SetValue(val)
 
     def onTypeChanged(self, commandEvent):
-        self.conf.userOut[self.index].type = self.types.index(self.typeCombo.GetValue())
+        newTyp = self.types.index(self.typeCombo.GetValue())
+        oldTyp = self.conf.userOut[self.index].type
+        if newTyp == oldTyp:
+            return
+        val = self.valueSpin.GetValue()
+        if newTyp == 1:
+            # changed to RPM multiply by 100
+            val = val * 100
+        elif oldTyp == 1:
+            # changed from RPM divide by 100
+            val = val / 100
+        self.valueSpin.SetValue(val)
+        self.conf.userOut[self.index].type = newTyp
 
     def onModeChanged(self, commandEvent):
         self.conf.userOut[self.index].mode = self.modes.index(self.modeCombo.GetValue())
 
     def onSpinCtrl(self, spinEvent):
-        self.conf.userOut[self.index].value = self.valueSpin.GetValue()
+        t = self.types.index(self.typeCombo.GetValue())
+        val = self.valueSpin.GetValue()
+        if t == 1:
+            # RPM is stored as multiples of 100
+            val = val / 100
+        self.conf.userOut[self.index].value = val
 
 class AddOutsPanel(wx.Panel):
 
@@ -344,14 +365,16 @@ class AddOutPanel(wx.Panel):
         self.prop = prop
 
         self.label = wx.StaticText(self, -1, label=label, pos=(0,5))
-        self.valueSpin = wx.SpinCtrl(self, -1, pos=(100,0), min=0, max=100, initial=0)
+        self.valueSpin = wx.SpinCtrl(self, -1, pos=(100,0), min=0, max=10000, initial=0)
         self.Bind(wx.EVT_SPINCTRL, self.onSpinCtrl, self.valueSpin)
 
     def setConfiguration(self, conf):
         self.conf = conf
 
-        self.valueSpin.SetValue(getattr(self.conf, self.prop))
+        # always represents rpm so multiply by 100
+        self.valueSpin.SetValue(getattr(self.conf, self.prop)*100)
 
     def onSpinCtrl(self, spinEvent):
-        setattr(self.conf, self.prop, self.valueSpin.GetValue())
+        # displays as multiple of 100 so lose the last two digits
+        setattr(self.conf, self.prop, self.valueSpin.GetValue()/100)
 
