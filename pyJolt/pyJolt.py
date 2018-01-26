@@ -38,8 +38,8 @@ class pyJolt(wx.Frame):
         self.conf = megajolt.Configuration()
         self.configPanel.setConfiguration(self.conf)
 
-        self.cOptions = configuratoroptions.ConfiguratorOptions(self, size=(100,200))
-        self.gcOptions = globalcontrolleroptions.GlobalControllerOptions(self, size=(100,200))
+        self.cOptions = configuratoroptions.ConfiguratorOptions(self, size=(500,220))
+        self.gcOptions = globalcontrolleroptions.GlobalControllerOptions(self, size=(350,235))
         self.laCalibration = loadaxiscalibration.LoadAxisCalibration(self, size=(100,200))
         self.auxOptions = auxiliaryinputoptions.AuxiliaryInputOptions(self, size=(100,200))
 
