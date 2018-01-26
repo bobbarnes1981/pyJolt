@@ -126,7 +126,9 @@ class pyJolt(wx.Frame):
         self.Bind(wx.EVT_MENU, self.onOpenConfig, openItem)
 
         fileMenu.AppendSeparator()
-        fileMenu.Append(-1, "Save")
+        
+        saveItem = fileMenu.Append(-1, "Save")
+        self.Bind(wx.EVT_MENU, self.onSaveConfig, saveItem)
 
         saveAsItem = fileMenu.Append(-1, "Save As")
         self.Bind(wx.EVT_MENU, self.onSaveAsConfig, saveAsItem)
@@ -239,7 +241,8 @@ class pyJolt(wx.Frame):
         self.configPanel.setConfiguration(self.conf)
 
     def onSaveConfig(self, menuEvent):
-        self.conf.save(self.filepath)
+        if self.filepath:
+            self.conf.save(self.filepath)
 
     def onGetConfig(self, menuEvent):
         pass
@@ -255,9 +258,12 @@ class pyJolt(wx.Frame):
             if fileDialog.ShowModal() == wx.ID_CANCEL:
                 return
 
-            self.filepath = fileDialog.GetPath()
-        self.conf.save(self.filepath)
+            filepath = fileDialog.GetPath()
+        self.conf.save(filepath)
 
+        self.filepath = filepath
+        self.updateTitle()
+        self.configPanel.setConfiguration(self.conf)
 
     def onExit(self, menuEvent):
         self.Close(True)

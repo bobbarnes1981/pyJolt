@@ -28,6 +28,7 @@ class Configuration():
         ]
         self.shiftLight = 0
         self.revLimit = 0
+        self.dirty = False
 
     def save(self, filename):
         data = "cylinders={0}\r\n".format(self.cylinders)

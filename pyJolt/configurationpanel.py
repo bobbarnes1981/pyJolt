@@ -156,10 +156,10 @@ class TabIgnitionMap(wx.Panel):
     def onGridCellChanged(self, gridEvent):
         adv = int(self.grid.GetCellValue(gridEvent.Row, gridEvent.Col))
         self.updateGridCellColour(gridEvent.Row, gridEvent.Col, adv)
+        self.conf.advance[self.rowCells-gridEvent.Row-1][gridEvent.Col] = adv
 
     def updateGridCellColour(self, row, col, adv):
         self.grid.SetCellBackgroundColour(row, col, AdvanceColours.colours[adv])
-        
 
 class TabAdvanceCorrection(wx.Panel):
 
@@ -212,6 +212,7 @@ class TabAdvanceCorrection(wx.Panel):
         options = wx.Panel(self, pos=(20, gridYOffset+self.grid.Size.height+20),size=(width,height))
         peakHoldLabel = wx.StaticText(options, -1, label='Peak Hold For', pos=(0, 5))
         self.peakHoldSpin = wx.SpinCtrl(options, -1, pos=(peakHoldLabel.Size.width+20,0), min=0, max=100, initial=0)
+        self.Bind(wx.EVT_SPINCTRL, self.onSpinCtrl, self.peakHoldSpin)
         peakHoldInfoLabel = wx.StaticText(options, -1, label='Ignition events (0 to disable)', pos=(peakHoldLabel.Size.width+self.peakHoldSpin.Size.width+40, 5))
 
     def setConfiguration(self, conf):
@@ -230,9 +231,15 @@ class TabAdvanceCorrection(wx.Panel):
         self.peakHoldSpin.SetValue(self.conf.correctionPeakHold)
 
     def onGridCellChanged(self, gridEvent):
+        val = int(self.grid.GetCellValue(gridEvent.Row, gridEvent.Col))
         if gridEvent.Row == 1:
-            adv = int(self.grid.GetCellValue(gridEvent.Row, gridEvent.Col))
-            self.updateGridCellColour(gridEvent.Row, gridEvent.Col, adv)
+            self.updateGridCellColour(gridEvent.Row, gridEvent.Col, val)
+            self.conf.correctionValues[gridEvent.Col] = val
+        if gridEvent.Row == 0:
+            self.conf.correctionBins[gridEvent.Col] = val
+
+    def onSpinCtrl(self, spinEvent):
+        self.conf.correctionPeakHold = self.peakHoldSpin.GetValue()
 
     def updateGridCellColour(self, row, col, adv):
         self.grid.SetCellBackgroundColour(row, col, AdvanceColours.colours[adv])
@@ -242,14 +249,14 @@ class TabOptions(wx.Panel):
     def __init__(self, parent):
         wx.Panel.__init__(self, parent)
 
+        self.userOutPanel = UserOutsPanel(self, pos=(20,20), size=(380,180))
+        self.addOutPanel = AddOutsPanel(self, pos=(420,20), size=(320,180))
+
     def setConfiguration(self, conf):
         self.conf = conf
 
-        userOutPanel = UserOutsPanel(self, pos=(20,20), size=(380,180))
-        userOutPanel.setConfiguration(self.conf)
-
-        addOutPanel = AddOutsPanel(self, pos=(420,20), size=(320,180))
-        addOutPanel.setConfiguration(self.conf)
+        self.userOutPanel.setConfiguration(self.conf)
+        self.addOutPanel.setConfiguration(self.conf)
 
 class UserOutsPanel(wx.Panel):
 
@@ -288,8 +295,13 @@ class UserOutPanel(wx.Panel):
         ]
         self.label = wx.StaticText(self, -1, label='Output '+str(index+1), pos=(0,5))
         self.typeCombo = wx.ComboBox(self, -1, value=self.types[0], pos=(65,0), choices=self.types, style=wx.CB_READONLY)
+        self.Bind(wx.EVT_COMBOBOX, self.onTypeChanged, self.typeCombo)
+
         self.modeCombo = wx.ComboBox(self, -1, value=self.modes[0], pos=(145,0), choices=self.modes, style=wx.CB_READONLY)
+        self.Bind(wx.EVT_COMBOBOX, self.onModeChanged, self.modeCombo)
+
         self.valueSpin = wx.SpinCtrl(self, -1, pos=(240,0), min=0, max=100, initial=0)
+        self.Bind(wx.EVT_SPINCTRL, self.onSpinCtrl, self.valueSpin)
     
     def setConfiguration(self, conf):
         self.conf = conf
@@ -300,32 +312,46 @@ class UserOutPanel(wx.Panel):
         self.modeCombo.SetValue(self.modes[userOut.mode])
         self.valueSpin.SetValue(userOut.value)
 
+    def onTypeChanged(self, commandEvent):
+        self.conf.userOut[self.index].type = self.types.index(self.typeCombo.GetValue())
+
+    def onModeChanged(self, commandEvent):
+        self.conf.userOut[self.index].mode = self.modes.index(self.modeCombo.GetValue())
+
+    def onSpinCtrl(self, spinEvent):
+        self.conf.userOut[self.index].value = self.valueSpin.GetValue()
+
 class AddOutsPanel(wx.Panel):
 
     def __init__(self, *args, **kw):
         wx.Panel.__init__(self, *args, **kw)
 
         wx.StaticText(self, -1, label='Additional Configurable Outputs', pos=(0,0))
-        self.shiftLight = AddOutPanel('Shift Light', self, pos=(0,20), size=(320,30))
-        self.revLimit = AddOutPanel('Rev Limit', self, pos=(0,60), size=(320,30))
+        self.shiftLight = AddOutPanel('shiftLight', 'Shift Light', self, pos=(0,20), size=(320,30))
+        self.revLimit = AddOutPanel('revLimit', 'Rev Limit', self, pos=(0,60), size=(320,30))
 
     def setConfiguration(self, conf):
         self.conf = conf
 
-        self.shiftLight.setConfiguration(self.conf, 0)
-        self.revLimit.setConfiguration(self.conf, 1)
+        self.shiftLight.setConfiguration(self.conf)
+        self.revLimit.setConfiguration(self.conf)
 
 class AddOutPanel(wx.Panel):
 
-    def __init__(self, label, *args, **kw):
+    def __init__(self, prop, label, *args, **kw):
         wx.Panel.__init__(self, *args, **kw)
+
+        self.prop = prop
 
         self.label = wx.StaticText(self, -1, label=label, pos=(0,5))
         self.valueSpin = wx.SpinCtrl(self, -1, pos=(100,0), min=0, max=100, initial=0)
+        self.Bind(wx.EVT_SPINCTRL, self.onSpinCtrl, self.valueSpin)
 
-    def setConfiguration(self, conf, i):
+    def setConfiguration(self, conf):
         self.conf = conf
 
-        val = self.conf.shiftLight if i == 0 else self.conf.revLimit
-        self.valueSpin.SetValue(val)
+        self.valueSpin.SetValue(getattr(self.conf, self.prop))
+
+    def onSpinCtrl(self, spinEvent):
+        setattr(self.conf, self.prop, self.valueSpin.GetValue())
 
