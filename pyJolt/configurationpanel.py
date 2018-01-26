@@ -99,53 +99,57 @@ class TabIgnitionMap(wx.Panel):
     def __init__(self, parent):
         wx.Panel.__init__(self, parent)
         
-        self.colCellWidth = 50
-        self.colLabelHeight = 30
+        colCellWidth = 50
+        colLabelHeight = 30
 
-        self.rowCellHeight = 20
-        self.rowLabelWidth = 80
+        rowCellHeight = 20
+        rowLabelWidth = 80
 
-        self.rpmLabelOffset = 10
-        self.mapLabelOffset = 10
+        rpmLabelOffset = 10
+        mapLabelOffset = 10
 
-    def setConfiguration(self, conf):
-        self.conf = conf
+        self.colCells = 10
+        self.rowCells = 10
 
-        colCells = len(self.conf.rpmBins)
+        width = (self.colCells*colCellWidth)+rowLabelWidth
+        height = (self.rowCells*rowCellHeight)+colLabelHeight
 
-        rowCells = len(self.conf.mapBins)
+        rpmLabel = wx.StaticText(self, label='RPM', pos=(width/2,rpmLabelOffset))
+        mapLabel = wx.StaticText(self, label='Load', pos=(mapLabelOffset,((rpmLabelOffset+height)/2)+rpmLabel.Size.height))
 
-        width = (colCells*self.colCellWidth)+self.rowLabelWidth
-        height = (rowCells*self.rowCellHeight)+self.colLabelHeight
-
-        rpmLabel = wx.StaticText(self, label='RPM', pos=(width/2,self.rpmLabelOffset))
-        mapLabel = wx.StaticText(self, label='Load', pos=(self.mapLabelOffset,((self.rpmLabelOffset+height)/2)+rpmLabel.Size.height))
-
-        gridXOffset = 20 + self.mapLabelOffset + mapLabel.Size.width
-        gridYOffset = 20 + self.rpmLabelOffset + rpmLabel.Size.height
+        gridXOffset = 20 + mapLabelOffset + mapLabel.Size.width
+        gridYOffset = 20 + rpmLabelOffset + rpmLabel.Size.height
 
         self.grid = wx.grid.Grid(self, pos=(gridXOffset,gridYOffset), size=(width,height))
-        self.grid.CreateGrid(rowCells, colCells)
+        self.grid.CreateGrid(self.rowCells, self.colCells)
 
         self.Bind(wx.grid.EVT_GRID_CELL_CHANGED, self.onGridCellChanged, self.grid)
 
         cellFont = wx.Font(10, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, False)
 
-        self.grid.SetRowLabelSize(self.rowLabelWidth)
-        for r in range(0, rowCells):
-            self.grid.SetRowLabelValue(r, str(self.conf.mapBins[r]))
-            self.grid.SetRowSize(r, self.rowCellHeight)
-
-        self.grid.SetColLabelSize(self.colLabelHeight)
-        for c in range(0, colCells):
-            self.grid.SetColLabelValue(c, str(self.conf.rpmBins[c]) + '00')
-            self.grid.SetColSize(c, self.colCellWidth)
-
-        for r in range(0, rowCells):
-            for c in range(0, colCells):
+        self.grid.SetRowLabelSize(rowLabelWidth)
+        for r in range(0, self.rowCells):
+            self.grid.SetRowSize(r, rowCellHeight)
+        self.grid.SetColLabelSize(colLabelHeight)
+        for c in range(0, self.colCells):
+            self.grid.SetColSize(c, colCellWidth)
+        for r in range(0, self.rowCells):
+            for c in range(0, self.colCells):
                 self.grid.SetCellFont(r, c, cellFont)
                 self.grid.SetCellEditor(r, c, wx.grid.GridCellNumberEditor(0, 59))
-                adv = self.conf.advance[rowCells-r-1][c]
+            
+    def setConfiguration(self, conf):
+        self.conf = conf
+
+        for r in range(0, self.rowCells):
+            self.grid.SetRowLabelValue(r, str(self.conf.mapBins[r]))
+
+        for c in range(0, self.colCells):
+            self.grid.SetColLabelValue(c, str(self.conf.rpmBins[c]))
+
+        for r in range(0, self.rowCells):
+            for c in range(0, self.colCells):
+                adv = self.conf.advance[self.rowCells-r-1][c]
                 self.grid.SetCellValue(r, c, str(adv))
                 self.updateGridCellColour(r, c, adv)
 
