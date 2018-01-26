@@ -258,22 +258,24 @@ class UserOutsPanel(wx.Panel):
 
         userOutLabel = wx.StaticText(self, -1, label='User Configurable Outputs', pos=(0,0))
         self.userOuts = [
-            UserOutPanel(self, pos=(0,20), size=(380,30)),
-            UserOutPanel(self, pos=(0,60), size=(380,30)),
-            UserOutPanel(self, pos=(0,100), size=(380,30)),
-            UserOutPanel(self, pos=(0,140), size=(380,30)),
+            UserOutPanel(0, self, pos=(0,20), size=(380,30)),
+            UserOutPanel(1, self, pos=(0,60), size=(380,30)),
+            UserOutPanel(2, self, pos=(0,100), size=(380,30)),
+            UserOutPanel(3, self, pos=(0,140), size=(380,30)),
         ]
 
     def setConfiguration(self, conf):
         self.conf = conf
 
         for i in range(0, 4):
-            self.userOuts[i].setConfiguration(self.conf, i)
+            self.userOuts[i].setConfiguration(self.conf)
 
 class UserOutPanel(wx.Panel):
 
-    def __init__(self, *args, **kw):
+    def __init__(self, index, *args, **kw):
         wx.Panel.__init__(self, *args, **kw)
+
+        self.index = index
 
         self.types = [
             'Load',
@@ -284,16 +286,19 @@ class UserOutPanel(wx.Panel):
             'Normal',
             'Invert'
         ]
+        self.label = wx.StaticText(self, -1, label='Output '+str(index+1), pos=(0,5))
+        self.typeCombo = wx.ComboBox(self, -1, value=self.types[0], pos=(65,0), choices=self.types, style=wx.CB_READONLY)
+        self.modeCombo = wx.ComboBox(self, -1, value=self.modes[0], pos=(145,0), choices=self.modes, style=wx.CB_READONLY)
+        self.valueSpin = wx.SpinCtrl(self, -1, pos=(240,0), min=0, max=100, initial=0)
     
-    def setConfiguration(self, conf, i):
+    def setConfiguration(self, conf):
         self.conf = conf
 
-        userOut = self.conf.userOut[i]
+        userOut = self.conf.userOut[self.index]
 
-        self.label = wx.StaticText(self, -1, label='Output '+str(i+1), pos=(0,5))
-        self.typeCombo = wx.ComboBox(self, -1, value=self.types[userOut.type], pos=(65,0), choices=self.types, style=wx.CB_READONLY)
-        self.modeCombo = wx.ComboBox(self, -1, value=self.modes[userOut.mode], pos=(145,0), choices=self.modes, style=wx.CB_READONLY)
-        self.valueSpin = wx.SpinCtrl(self, -1, pos=(240,0), min=0, max=100, initial=userOut.value)
+        self.typeCombo.SetValue(self.types[userOut.type])
+        self.modeCombo.SetValue(self.modes[userOut.mode])
+        self.valueSpin.SetValue(userOut.value)
 
 class AddOutsPanel(wx.Panel):
 
@@ -301,12 +306,11 @@ class AddOutsPanel(wx.Panel):
         wx.Panel.__init__(self, *args, **kw)
 
         wx.StaticText(self, -1, label='Additional Configurable Outputs', pos=(0,0))
+        self.shiftLight = AddOutPanel('Shift Light', self, pos=(0,20), size=(320,30))
+        self.revLimit = AddOutPanel('Rev Limit', self, pos=(0,60), size=(320,30))
 
     def setConfiguration(self, conf):
         self.conf = conf
-
-        self.shiftLight = AddOutPanel('Shift Light', self, pos=(0,20), size=(320,30))
-        self.revLimit = AddOutPanel('Rev Limit', self, pos=(0,60), size=(320,30))
 
         self.shiftLight.setConfiguration(self.conf, 0)
         self.revLimit.setConfiguration(self.conf, 1)
@@ -317,11 +321,11 @@ class AddOutPanel(wx.Panel):
         wx.Panel.__init__(self, *args, **kw)
 
         self.label = wx.StaticText(self, -1, label=label, pos=(0,5))
+        self.valueSpin = wx.SpinCtrl(self, -1, pos=(100,0), min=0, max=100, initial=0)
 
     def setConfiguration(self, conf, i):
         self.conf = conf
 
         val = self.conf.shiftLight if i == 0 else self.conf.revLimit
-
-        self.valueSpin = wx.SpinCtrl(self, -1, pos=(100,0), min=0, max=100, initial=val)
+        self.valueSpin.SetValue(val)
 
