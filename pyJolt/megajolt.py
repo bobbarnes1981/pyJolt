@@ -84,7 +84,7 @@ class Configuration():
         prop = k[7:-1].lower()
         k = k[:7]
         attr = getattr(self, k)
-        setattr(attr[num], prop, v)
+        setattr(attr[num], prop, int(v))
         setattr(self, k, attr)
 
 class UserOut():
