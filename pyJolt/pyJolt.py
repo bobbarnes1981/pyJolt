@@ -3,6 +3,10 @@ import configurationpanel
 import runtimepanel
 import tuningpanel
 import megajolt
+import configuratoroptions
+import globalcontrolleroptions
+import loadaxiscalibration
+import auxiliaryinputoptions
 
 class pyJolt(wx.Frame):
 
@@ -33,6 +37,11 @@ class pyJolt(wx.Frame):
         self.filepath = None
         self.conf = megajolt.Configuration()
         self.configPanel.setConfiguration(self.conf)
+
+        self.cOptions = configuratoroptions.ConfiguratorOptions(self, size=(100,200))
+        self.gcOptions = globalcontrolleroptions.GlobalControllerOptions(self, size=(100,200))
+        self.laCalibration = loadaxiscalibration.LoadAxisCalibration(self, size=(100,200))
+        self.auxOptions = auxiliaryinputoptions.AuxiliaryInputOptions(self, size=(100,200))
 
     def showConfigPanel(self):
         self.configPanel.Show()
@@ -165,7 +174,7 @@ class pyJolt(wx.Frame):
         self.Bind(wx.EVT_MENU, self.onControllerOptions, controllerItem)
 
         axisCalItem = toolsMenu.Append(-1, "Load Axis Calibration")
-        self.Bind(wx.EVT_MENU, self.onAxisCalibration, axisCalItem)
+        self.Bind(wx.EVT_MENU, self.onLoadAxisCalibration, axisCalItem)
 
         auxInputItem = toolsMenu.Append(-1, "Auxiliary Input Options")
         self.Bind(wx.EVT_MENU, self.onAuxInputOptions, auxInputItem)
@@ -212,16 +221,16 @@ class pyJolt(wx.Frame):
         self.showTuningPanel()
 
     def onConfiguratorOptions(self, menuEvent):
-        pass
+        self.cOptions.ShowModal()
 
     def onControllerOptions(self, menuEvent):
-        pass
+        self.gcOptions.ShowModal()
 
-    def onAxisCalibration(self, menuEvent):
-        pass
+    def onLoadAxisCalibration(self, menuEvent):
+        self.laCalibration.ShowModal()
 
     def onAuxInputOptions(self, menuEvent):
-        pass
+        self.auxOptions.ShowModal()
 
     def onEditBins(self, menuEvent):
         pass
