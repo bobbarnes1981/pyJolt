@@ -166,64 +166,68 @@ class TabAdvanceCorrection(wx.Panel):
     def __init__(self, parent):
         wx.Panel.__init__(self, parent)
 
-        self.colCellWidth = 50
-        self.colLabelHeight = 30
+        colCellWidth = 50
+        colLabelHeight = 30
 
-        self.rowCellHeight = 20
-        self.rowLabelWidth = 80
+        rowCellHeight = 20
+        rowLabelWidth = 80
 
-    def setConfiguration(self, conf):
-        self.conf = conf
-        
-        colCells = len(self.conf.correctionBins)
+        self.colCells = 10
+        self.rowCells = 2
 
-        rowCells = 2
-
-        width = (colCells*self.colCellWidth)+self.rowLabelWidth
-        height = (rowCells*self.rowCellHeight)+self.colLabelHeight
+        width = (self.colCells*colCellWidth)+rowLabelWidth
+        height = (self.rowCells*rowCellHeight)+colLabelHeight
 
         gridXOffset = 20
         gridYOffset = 20
 
         self.grid = wx.grid.Grid(self, pos=(gridXOffset,gridYOffset), size=(width,height))
-        self.grid.CreateGrid(rowCells, colCells)
+        self.grid.CreateGrid(self.rowCells, self.colCells)
 
         self.Bind(wx.grid.EVT_GRID_CELL_CHANGED, self.onGridCellChanged, self.grid)
 
         cellFont = wx.Font(10, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_BOLD, False)
 
-        self.grid.SetRowLabelSize(self.rowLabelWidth)
-        for r in range(0, rowCells):
+        self.grid.SetRowLabelSize(rowLabelWidth)
+        for r in range(0, self.rowCells):
             if r == 0:
                 self.grid.SetRowLabelValue(r, 'Bins')
             if r == 1:
                 self.grid.SetRowLabelValue(r, 'Correction')
-            self.grid.SetRowSize(r, self.rowCellHeight)
+            self.grid.SetRowSize(r, rowCellHeight)
 
-        self.grid.SetColLabelSize(self.colLabelHeight)
-        for c in range(0, colCells):
+        self.grid.SetColLabelSize(colLabelHeight)
+        for c in range(0, self.colCells):
             self.grid.SetColLabelValue(c, str(c+1))
-            self.grid.SetColSize(c, self.colCellWidth)
+            self.grid.SetColSize(c, colCellWidth)
 
-        for r in range(0, rowCells):
-            for c in range(0, colCells):
+        for r in range(0, self.rowCells):
+            for c in range(0, self.colCells):
                 self.grid.SetCellFont(r, c, cellFont)
                 if r == 0:
                     self.grid.SetCellEditor(r, c, wx.grid.GridCellNumberEditor(0, 255))
-                    b = self.conf.correctionBins[c]
-                    self.grid.SetCellValue(r, c, str(b))
-
                 if r == 1:
                     self.grid.SetCellEditor(r, c, wx.grid.GridCellNumberEditor(0, 59))
+
+        options = wx.Panel(self, pos=(20, gridYOffset+self.grid.Size.height+20),size=(width,height))
+        peakHoldLabel = wx.StaticText(options, -1, label='Peak Hold For', pos=(0, 5))
+        self.peakHoldSpin = wx.SpinCtrl(options, -1, pos=(peakHoldLabel.Size.width+20,0), min=0, max=100, initial=0)
+        peakHoldInfoLabel = wx.StaticText(options, -1, label='Ignition events (0 to disable)', pos=(peakHoldLabel.Size.width+self.peakHoldSpin.Size.width+40, 5))
+
+    def setConfiguration(self, conf):
+        self.conf = conf
+        
+        for r in range(0, self.rowCells):
+            for c in range(0, self.colCells):
+                if r == 0:
+                    b = self.conf.correctionBins[c]
+                    self.grid.SetCellValue(r, c, str(b))
+                if r == 1:
                     adv = self.conf.correctionValues[c]
                     self.grid.SetCellValue(r, c, str(adv))
                     self.updateGridCellColour(r, c, adv)
 
-        # advanced option panel
-        options = wx.Panel(self, pos=(20, gridYOffset+self.grid.Size.height+20),size=(width,height))
-        peakHoldLabel = wx.StaticText(options, -1, label='Peak Hold For', pos=(0, 5))
-        peakHoldSpin = wx.SpinCtrl(options, -1, pos=(peakHoldLabel.Size.width+20,0), min=0, max=100, initial=self.conf.correctionPeakHold)
-        peakHoldInfoLabel = wx.StaticText(options, -1, label='Ignition events (0 to disable)', pos=(peakHoldLabel.Size.width+peakHoldSpin.Size.width+40, 5))
+        self.peakHoldSpin.SetValue(self.conf.correctionPeakHold)
 
     def onGridCellChanged(self, gridEvent):
         if gridEvent.Row == 1:
