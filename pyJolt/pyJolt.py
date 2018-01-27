@@ -39,7 +39,7 @@ class pyJolt(wx.Frame):
         self.configPanel.setConfiguration(self.conf)
 
         self.cOptions = configuratoroptions.ConfiguratorOptions(self)
-        self.gcOptions = globalcontrolleroptions.GlobalControllerOptions(self, size=(350,235))
+        self.gcOptions = globalcontrolleroptions.GlobalControllerOptions(self)
         self.laCalibration = loadaxiscalibration.LoadAxisCalibration(self, size=(100,200))
         self.auxOptions = auxiliaryinputoptions.AuxiliaryInputOptions(self, size=(100,200))
 
