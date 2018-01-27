@@ -1,20 +1,12 @@
 #ToDo
 
-Make dialogs dynamic size with consistent spacing
-
-Add SIZERs to options tab, other tabs?
-
 Tools menu
 
     Configurator Options
     
-        UI
-        
         Logic
     
     Global Controller Options
-        
-        UI
         
         Logic
     
@@ -30,15 +22,11 @@ Tools menu
         
         Logic
 
-Edit RPM/Load Bins popup
-
 Status bar
 
 config validation
 
 Gauge views
-
-Help popup
 
 Get/Write
 
