@@ -36,16 +36,17 @@ class pyJolt(wx.Frame):
 
         self.showConfigPanel()
 
-        self.filepath = None
-        self.conf = megajolt.Configuration()
-        self.configPanel.setConfiguration(self.conf)
-
         self.editBins = editrpmloadbins.EditRpmLoadBins(self)
         self.cOptions = configuratoroptions.ConfiguratorOptions(self)
         self.gcOptions = globalcontrolleroptions.GlobalControllerOptions(self)
         self.laCalibration = loadaxiscalibration.LoadAxisCalibration(self)
         self.auxOptions = auxiliaryinputoptions.AuxiliaryInputOptions(self)
         self.aboutPyJolt = aboutpyjolt.AboutPyJolt(self)
+
+        self.filepath = None
+        self.conf = megajolt.Configuration()
+        self.configPanel.setConfiguration(self.conf)
+        self.editBins.setConfiguration(self.conf)
 
     def showConfigPanel(self):
         self.configPanel.Show()
@@ -213,6 +214,7 @@ class pyJolt(wx.Frame):
         self.updateTitle()
         self.conf = newConf
         self.configPanel.setConfiguration(self.conf)
+        self.editBins.setConfiguration(self.conf)
 
     def onConfigPerspective(self, menuEvent):
         self.showConfigPanel()
@@ -251,6 +253,7 @@ class pyJolt(wx.Frame):
         self.updateTitle()
         self.conf = newConf
         self.configPanel.setConfiguration(self.conf)
+        self.editBins.setConfiguration(self.conf)
 
     def onSaveConfig(self, menuEvent):
         if self.filepath:
@@ -276,6 +279,7 @@ class pyJolt(wx.Frame):
         self.filepath = filepath
         self.updateTitle()
         self.configPanel.setConfiguration(self.conf)
+        self.editBins.setConfiguration(self.conf)
 
     def onExit(self, menuEvent):
         self.Close(True)
