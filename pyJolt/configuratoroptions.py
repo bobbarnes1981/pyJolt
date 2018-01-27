@@ -57,7 +57,7 @@ class ConfiguratorOptions(wx.Dialog):
         self.cancelButton = wx.Button(self, wx.ID_ANY, label='Cancel')
         buttonSizer.Add(self.okButton, 0, wx.ALL, 5)
         buttonSizer.Add(self.cancelButton, 0, wx.ALL, 5)
-        sizer.Add(buttonSizer, 0, wx.ALL|wx.CENTER, 5)
+        sizer.Add(buttonSizer, 0, wx.ALL|wx.CENTRE, 5)
 
         self.SetSizer(sizer)
         sizer.Fit(self)

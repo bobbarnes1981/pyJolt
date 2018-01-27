@@ -46,12 +46,12 @@ class GlobalControllerOptions(wx.Dialog):
         self.writeButton = wx.Button(self, wx.ID_ANY, label='Write Options')
         buttonSizer.Add(self.readButton, 0, wx.ALL, 5)
         buttonSizer.Add(self.writeButton, 0, wx.ALL, 5)
-        sizer.Add(buttonSizer, 0, wx.ALL|wx.CENTER, 5)
+        sizer.Add(buttonSizer, 0, wx.ALL|wx.CENTRE, 5)
 
         okSizer = wx.BoxSizer(wx.HORIZONTAL)
         self.okButton = wx.Button(self, wx.ID_ANY, label='OK')
         okSizer.Add(self.okButton, 0, wx.ALL, 5)
-        sizer.Add(okSizer, 0, wx.ALL|wx.CENTER, 5)
+        sizer.Add(okSizer, 0, wx.ALL|wx.CENTRE, 5)
 
         self.SetSizer(sizer)
         sizer.Fit(self)

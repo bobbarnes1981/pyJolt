@@ -99,28 +99,29 @@ class TabIgnitionMap(wx.Panel):
     def __init__(self, parent):
         wx.Panel.__init__(self, parent)
         
+        sizerV = wx.BoxSizer(wx.VERTICAL)
+
         colCellWidth = 50
         colLabelHeight = 30
 
         rowCellHeight = 20
         rowLabelWidth = 80
 
-        rpmLabelOffset = 10
-        mapLabelOffset = 10
-
         self.colCells = 10
         self.rowCells = 10
 
-        width = (self.colCells*colCellWidth)+rowLabelWidth
-        height = (self.rowCells*rowCellHeight)+colLabelHeight
+        rpmLabel = wx.StaticText(self, label='RPM')
+        sizerV.Add(rpmLabel, 0, wx.ALL|wx.ALIGN_CENTRE_HORIZONTAL, 5)
 
-        rpmLabel = wx.StaticText(self, label='RPM', pos=(width/2,rpmLabelOffset))
-        mapLabel = wx.StaticText(self, label='Load', pos=(mapLabelOffset,((rpmLabelOffset+height)/2)+rpmLabel.Size.height))
+        sizerH = wx.BoxSizer(wx.HORIZONTAL)
+        sizerV.Add(sizerH, 0, wx.ALL, 5)
 
-        gridXOffset = 20 + mapLabelOffset + mapLabel.Size.width
-        gridYOffset = 20 + rpmLabelOffset + rpmLabel.Size.height
+        mapLabel = wx.StaticText(self, label='Load')
+        sizerH.Add(mapLabel, 0, wx.ALL|wx.ALIGN_CENTRE_VERTICAL, 5)
 
-        self.grid = wx.grid.Grid(self, pos=(gridXOffset,gridYOffset), size=(width,height))
+        self.grid = wx.grid.Grid(self)
+        sizerH.Add(self.grid, 0, wx.ALL, 5)
+
         self.grid.CreateGrid(self.rowCells, self.colCells)
 
         self.Bind(wx.grid.EVT_GRID_CELL_CHANGED, self.onGridCellChanged, self.grid)
@@ -137,6 +138,8 @@ class TabIgnitionMap(wx.Panel):
             for c in range(0, self.colCells):
                 self.grid.SetCellFont(r, c, cellFont)
                 self.grid.SetCellEditor(r, c, wx.grid.GridCellNumberEditor(0, 59))
+
+        self.SetSizer(sizerV)
             
     def setConfiguration(self, conf):
         self.conf = conf
@@ -166,6 +169,8 @@ class TabAdvanceCorrection(wx.Panel):
     def __init__(self, parent):
         wx.Panel.__init__(self, parent)
 
+        sizer = wx.BoxSizer(wx.VERTICAL)
+
         colCellWidth = 50
         colLabelHeight = 30
 
@@ -175,14 +180,9 @@ class TabAdvanceCorrection(wx.Panel):
         self.colCells = 10
         self.rowCells = 2
 
-        width = (self.colCells*colCellWidth)+rowLabelWidth
-        height = (self.rowCells*rowCellHeight)+colLabelHeight
-
-        gridXOffset = 20
-        gridYOffset = 20
-
-        self.grid = wx.grid.Grid(self, pos=(gridXOffset,gridYOffset), size=(width,height))
+        self.grid = wx.grid.Grid(self)
         self.grid.CreateGrid(self.rowCells, self.colCells)
+        sizer.Add(self.grid, 0, wx.ALL, 5)
 
         self.Bind(wx.grid.EVT_GRID_CELL_CHANGED, self.onGridCellChanged, self.grid)
 
@@ -209,11 +209,19 @@ class TabAdvanceCorrection(wx.Panel):
                 if r == 1:
                     self.grid.SetCellEditor(r, c, wx.grid.GridCellNumberEditor(0, 59))
 
-        options = wx.Panel(self, pos=(20, gridYOffset+self.grid.Size.height+20),size=(width,height))
-        peakHoldLabel = wx.StaticText(options, -1, label='Peak Hold For', pos=(0, 5))
-        self.peakHoldSpin = wx.SpinCtrl(options, -1, pos=(peakHoldLabel.Size.width+20,0), min=0, max=100, initial=0)
+        peakSizer = wx.BoxSizer(wx.HORIZONTAL)
+        sizer.Add(peakSizer, 0, wx.ALL, 5)
+
+        peakHoldLabel = wx.StaticText(self, wx.ID_ANY, label='Peak Hold For')
+        self.peakHoldSpin = wx.SpinCtrl(self, wx.ID_ANY, min=0, max=100, initial=0)
         self.Bind(wx.EVT_SPINCTRL, self.onSpinCtrl, self.peakHoldSpin)
-        peakHoldInfoLabel = wx.StaticText(options, -1, label='Ignition events (0 to disable)', pos=(peakHoldLabel.Size.width+self.peakHoldSpin.Size.width+40, 5))
+        peakHoldInfoLabel = wx.StaticText(self, wx.ID_ANY, label='Ignition events (0 to disable)')
+
+        peakSizer.Add(peakHoldLabel, 0, wx.ALL, 5)
+        peakSizer.Add(self.peakHoldSpin, 0, wx.ALL, 5)
+        peakSizer.Add(peakHoldInfoLabel, 0, wx.ALL, 5)
+
+        self.SetSizer(sizer)
 
     def setConfiguration(self, conf):
         self.conf = conf
@@ -249,8 +257,14 @@ class TabOptions(wx.Panel):
     def __init__(self, parent):
         wx.Panel.__init__(self, parent)
 
-        self.userOutPanel = UserOutsPanel(self, pos=(20,20), size=(380,180))
-        self.addOutPanel = AddOutsPanel(self, pos=(420,20), size=(320,180))
+        sizer = wx.BoxSizer(wx.HORIZONTAL)
+
+        self.userOutPanel = UserOutsPanel(self)
+        self.addOutPanel = AddOutsPanel(self)
+        sizer.Add(self.userOutPanel, 0, wx.ALL, 5)
+        sizer.Add(self.addOutPanel, 0, wx.ALL, 5)
+
+        self.SetSizer(sizer)
 
     def setConfiguration(self, conf):
         self.conf = conf
@@ -263,13 +277,23 @@ class UserOutsPanel(wx.Panel):
     def __init__(self, *args, **kw):
         wx.Panel.__init__(self, *args, **kw)
 
-        userOutLabel = wx.StaticText(self, -1, label='User Configurable Outputs', pos=(0,0))
+        sizer = wx.BoxSizer(wx.VERTICAL)
+
+        userOutLabel = wx.StaticText(self, wx.ID_ANY, label='User Configurable Outputs')
         self.userOuts = [
-            UserOutPanel(0, self, pos=(0,20), size=(380,30)),
-            UserOutPanel(1, self, pos=(0,60), size=(380,30)),
-            UserOutPanel(2, self, pos=(0,100), size=(380,30)),
-            UserOutPanel(3, self, pos=(0,140), size=(380,30)),
+            UserOutPanel(0, self),
+            UserOutPanel(1, self),
+            UserOutPanel(2, self),
+            UserOutPanel(3, self),
         ]
+
+        sizer.Add(userOutLabel, 0, wx.ALL, 5)
+        sizer.Add(self.userOuts[0], 0, wx.ALL, 5)
+        sizer.Add(self.userOuts[1], 0, wx.ALL, 5)
+        sizer.Add(self.userOuts[2], 0, wx.ALL, 5)
+        sizer.Add(self.userOuts[3], 0, wx.ALL, 5)
+
+        self.SetSizer(sizer)
 
     def setConfiguration(self, conf):
         self.conf = conf
@@ -293,16 +317,26 @@ class UserOutPanel(wx.Panel):
             'Normal',
             'Invert'
         ]
-        self.label = wx.StaticText(self, -1, label='Output '+str(index+1), pos=(0,5))
-        self.typeCombo = wx.ComboBox(self, -1, value=self.types[0], pos=(65,0), choices=self.types, style=wx.CB_READONLY)
+
+        sizer = wx.BoxSizer(wx.HORIZONTAL)
+
+        self.label = wx.StaticText(self, wx.ID_ANY, label='Output '+str(index+1))
+        sizer.Add(self.label, 0, wx.ALL, 5)
+
+        self.typeCombo = wx.ComboBox(self, wx.ID_ANY, value=self.types[0], choices=self.types, style=wx.CB_READONLY)
         self.Bind(wx.EVT_COMBOBOX, self.onTypeChanged, self.typeCombo)
+        sizer.Add(self.typeCombo, 0, wx.ALL, 5)
 
-        self.modeCombo = wx.ComboBox(self, -1, value=self.modes[0], pos=(145,0), choices=self.modes, style=wx.CB_READONLY)
+        self.modeCombo = wx.ComboBox(self, wx.ID_ANY, value=self.modes[0], choices=self.modes, style=wx.CB_READONLY)
         self.Bind(wx.EVT_COMBOBOX, self.onModeChanged, self.modeCombo)
+        sizer.Add(self.modeCombo, 0, wx.ALL, 5)
 
-        self.valueSpin = wx.SpinCtrl(self, -1, pos=(240,0), min=0, max=10000, initial=0)
+        self.valueSpin = wx.SpinCtrl(self, wx.ID_ANY, min=0, max=10000, initial=0)
         self.Bind(wx.EVT_SPINCTRL, self.onSpinCtrl, self.valueSpin)
+        sizer.Add(self.valueSpin, 0, wx.ALL, 5)
     
+        self.SetSizer(sizer)
+
     def setConfiguration(self, conf):
         self.conf = conf
 
@@ -347,9 +381,17 @@ class AddOutsPanel(wx.Panel):
     def __init__(self, *args, **kw):
         wx.Panel.__init__(self, *args, **kw)
 
-        wx.StaticText(self, -1, label='Additional Configurable Outputs', pos=(0,0))
-        self.shiftLight = AddOutPanel('shiftLight', 'Shift Light', self, pos=(0,20), size=(320,30))
-        self.revLimit = AddOutPanel('revLimit', 'Rev Limit', self, pos=(0,60), size=(320,30))
+        sizer = wx.BoxSizer(wx.VERTICAL)
+
+        label = wx.StaticText(self, wx.ID_ANY, label='Additional Configurable Outputs')
+        self.shiftLight = AddOutPanel('shiftLight', 'Shift Light', self)
+        self.revLimit = AddOutPanel('revLimit', 'Rev Limit', self)
+
+        sizer.Add(label, 0, wx.ALL, 5)
+        sizer.Add(self.shiftLight, 0, wx.ALL, 5)
+        sizer.Add(self.revLimit, 0, wx.ALL, 5)
+
+        self.SetSizer(sizer)
 
     def setConfiguration(self, conf):
         self.conf = conf
@@ -364,9 +406,16 @@ class AddOutPanel(wx.Panel):
 
         self.prop = prop
 
-        self.label = wx.StaticText(self, -1, label=label, pos=(0,5))
-        self.valueSpin = wx.SpinCtrl(self, -1, pos=(100,0), min=0, max=10000, initial=0)
+        sizer = wx.BoxSizer(wx.HORIZONTAL)
+
+        self.label = wx.StaticText(self, wx.ID_ANY, label=label)
+        self.valueSpin = wx.SpinCtrl(self, wx.ID_ANY, min=0, max=10000, initial=0)
         self.Bind(wx.EVT_SPINCTRL, self.onSpinCtrl, self.valueSpin)
+
+        sizer.Add(self.label, 0, wx.ALL, 5)
+        sizer.Add(self.valueSpin, 0, wx.ALL, 5)
+
+        self.SetSizer(sizer)
 
     def setConfiguration(self, conf):
         self.conf = conf
