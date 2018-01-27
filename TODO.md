@@ -1,5 +1,7 @@
 #ToDo
 
+Make dialogs dynamic size with consistent spacing
+
 Tools menu
 
     Configurator Options
