@@ -2,6 +2,8 @@
 
 Make dialogs dynamic size with consistent spacing
 
+Add SIZERs to options tab, other tabs?
+
 Tools menu
 
     Configurator Options
