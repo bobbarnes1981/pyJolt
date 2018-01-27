@@ -54,7 +54,9 @@ class ConfiguratorOptions(wx.Dialog):
 
         buttonSizer = wx.BoxSizer(wx.HORIZONTAL)
         self.okButton = wx.Button(self, wx.ID_ANY, label='OK')
+        self.Bind(wx.EVT_BUTTON, self.onOkButton, self.okButton)
         self.cancelButton = wx.Button(self, wx.ID_ANY, label='Cancel')
+        self.Bind(wx.EVT_BUTTON, self.onCancelButton, self.cancelButton)
         buttonSizer.Add(self.okButton, 0, wx.ALL, 5)
         buttonSizer.Add(self.cancelButton, 0, wx.ALL, 5)
         sizer.Add(buttonSizer, 0, wx.ALL|wx.CENTRE, 5)
@@ -62,3 +64,8 @@ class ConfiguratorOptions(wx.Dialog):
         self.SetSizer(sizer)
         sizer.Fit(self)
 
+    def onOkButton(self, commandEvent):
+        pass
+
+    def onCancelButton(self, commandEvent):
+        self.Hide()

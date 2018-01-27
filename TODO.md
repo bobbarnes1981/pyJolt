@@ -2,13 +2,9 @@
 
 Tools menu
 
-    Configurator Options
+    Configurator Options - Logic
     
-        Logic
-    
-    Global Controller Options
-        
-        Logic
+    Global Controller Options - Logic
     
     Load Axis Calibration
         
@@ -28,8 +24,9 @@ config validation
 
 Gauge views
 
-Get/Write
+Get/Write/Commit
 
 Continuous update of state from ECU
 
 Datalogging
+

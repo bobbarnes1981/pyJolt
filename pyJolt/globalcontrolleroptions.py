@@ -43,15 +43,27 @@ class GlobalControllerOptions(wx.Dialog):
 
         buttonSizer = wx.BoxSizer(wx.HORIZONTAL)
         self.readButton = wx.Button(self, wx.ID_ANY, label='Read Options')
+        self.Bind(wx.EVT_BUTTON, self.onReadButton, self.readButton)
         self.writeButton = wx.Button(self, wx.ID_ANY, label='Write Options')
+        self.Bind(wx.EVT_BUTTON, self.onWriteButton, self.writeButton)
         buttonSizer.Add(self.readButton, 0, wx.ALL, 5)
         buttonSizer.Add(self.writeButton, 0, wx.ALL, 5)
         sizer.Add(buttonSizer, 0, wx.ALL|wx.CENTRE, 5)
 
         okSizer = wx.BoxSizer(wx.HORIZONTAL)
         self.okButton = wx.Button(self, wx.ID_ANY, label='OK')
+        self.Bind(wx.EVT_BUTTON, self.onOkButton, self.okButton)
         okSizer.Add(self.okButton, 0, wx.ALL, 5)
         sizer.Add(okSizer, 0, wx.ALL|wx.CENTRE, 5)
 
         self.SetSizer(sizer)
         sizer.Fit(self)
+
+    def onReadButton(self, commandEvent):
+        pass
+
+    def onWriteButton(self, commandEvent):
+        pass
+
+    def onOkButton(self, commandEvent):
+        self.Hide()

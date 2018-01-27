@@ -52,16 +52,19 @@ class pyJolt(wx.Frame):
         self.configPanel.Show()
         self.runtimePanel.Hide()
         self.tuningPanel.Hide()
+        self.Layout()
         
     def showRuntimePanel(self):
         self.configPanel.Hide()
         self.runtimePanel.Show()
         self.tuningPanel.Hide()
+        self.Layout()
 
     def showTuningPanel(self):
         self.configPanel.Hide()
         self.runtimePanel.Hide()
         self.tuningPanel.Show()
+        self.Layout()
 
     def updateTitle(self):
         if not self.filepath:
