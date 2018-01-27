@@ -3,10 +3,12 @@ import configurationpanel
 import runtimepanel
 import tuningpanel
 import megajolt
+import editrpmloadbins
 import configuratoroptions
 import globalcontrolleroptions
 import loadaxiscalibration
 import auxiliaryinputoptions
+import aboutpyjolt
 
 class pyJolt(wx.Frame):
 
@@ -38,10 +40,12 @@ class pyJolt(wx.Frame):
         self.conf = megajolt.Configuration()
         self.configPanel.setConfiguration(self.conf)
 
+        self.editBins = editrpmloadbins.EditRpmLoadBins(self)
         self.cOptions = configuratoroptions.ConfiguratorOptions(self)
         self.gcOptions = globalcontrolleroptions.GlobalControllerOptions(self)
-        self.laCalibration = loadaxiscalibration.LoadAxisCalibration(self, size=(100,200))
-        self.auxOptions = auxiliaryinputoptions.AuxiliaryInputOptions(self, size=(100,200))
+        self.laCalibration = loadaxiscalibration.LoadAxisCalibration(self)
+        self.auxOptions = auxiliaryinputoptions.AuxiliaryInputOptions(self)
+        self.aboutPyJolt = aboutpyjolt.AboutPyJolt(self)
 
     def showConfigPanel(self):
         self.configPanel.Show()
@@ -233,7 +237,7 @@ class pyJolt(wx.Frame):
         self.auxOptions.ShowModal()
 
     def onEditBins(self, menuEvent):
-        pass
+        self.editBins.ShowModal()
 
     def onOpenConfig(self, menuEvent):
         with wx.FileDialog(self, "Open Ignition Configuration", wildcard="MJLJ Configuration Files (*.mjlj)|*.mjlj", style=wx.FD_OPEN | wx.FD_FILE_MUST_EXIST) as fileDialog:
@@ -278,4 +282,5 @@ class pyJolt(wx.Frame):
         self.Close(True)
 
     def onAbout(self, menuEvent):
-        pass
+        self.aboutPyJolt.ShowModal()
+
