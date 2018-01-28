@@ -1,14 +1,14 @@
 import wx
+import serial.tools.list_ports
 
 class ConfiguratorOptions(wx.Dialog):
 
     def __init__(self, *args, **kw):
         super(ConfiguratorOptions, self).__init__(*args, **kw)
 
-        self.comPorts = [
-            'COM1',
-            'COM2'
-        ]
+        self.comPorts = []
+        for port in serial.tools.list_ports.comports():
+            self.comPorts.append(port.device)
         self.actions = [
             'No action',
             'Prompt to read configuration',

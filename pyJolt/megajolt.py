@@ -98,3 +98,8 @@ class UserOut():
         self.mode = mode
         self.value = value
 
+class Communication():
+
+    def __init__(self):
+        pass
+
