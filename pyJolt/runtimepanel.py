@@ -1,28 +1,58 @@
 import wx
+import time
+from threading import *
+from wx.lib import plot
 
-class RuntimePanel(wx.Panel):
-    def __init__(self, parent):
-        wx.Panel.__init__(self, parent)
+import random
 
-        self.testData = [
-            10, 20, 30, 40, 50, 40, 30, 20, 10
-        ]
+class RuntimePanel(plot.PlotCanvas):
 
-        self.Bind(wx.EVT_PAINT, self.onPaint)
+    def __init__(self, *args, **kw):
+        plot.PlotCanvas.__init__(self, *args, **kw)
 
-    def onPaint(self, event):
-        dc = wx.PaintDC(self)
+        self.SetBackgroundColour(wx.BLACK)
 
-        dc.SetBackground(wx.Brush(wx.BLACK))
-        dc.Clear()
+        self.x_data = [1,2,3,4,5,6,7,8,9,10]
 
-        dc.SetPen(wx.Pen(wx.RED, 1))
+        self.y1_data = [1,2,3,4,5,6,7,8,9,10]
+        self.y2_data = [8,7,6,5,4,5,6,7,8,9]
 
-        dc.DrawLine(0,0,30,20)
+        self.running = True
 
-        dc.SetPen(wx.Pen(wx.BLUE, 1))
-        for i in range(0, len(self.testData)-1):
-            dc.DrawLine(
-                i*10, self.testData[i]*10,
-                (i+1)*10, self.testData[i+1]*10)
+        self.timer = Timer(0, self.updateData)
+        self.timer.start()
 
+    def updateData(self):
+        count = 0
+        while(self.running):
+            count += 1
+
+            print('update: '+ str(count))
+        
+            xy1_data = list(zip(self.x_data, self.y1_data))
+            xy2_data = list(zip(self.x_data, self.y2_data))
+
+            line1 = plot.PolySpline(
+                xy1_data,
+                colour=wx.RED,
+                width=2
+            )
+            line2 = plot.PolySpline(
+                xy2_data,
+                colour=wx.BLUE,
+                width=2
+            )
+            graphics = plot.PlotGraphics([line1,line2])
+            axes_pen = wx.Pen(wx.WHITE, 1, wx.PENSTYLE_LONG_DASH)
+            self.axesPen = axes_pen
+            self.Draw(graphics)
+
+            self.y1_data = self.rotate(self.y1_data)
+            self.y2_data = self.rotate(self.y2_data)
+
+            #self.testData[self.testDataMax-1] = random.randint(0, 255)
+            
+            time.sleep(1)
+
+    def rotate(self, l):
+        return l[-1:]+l[:-1]

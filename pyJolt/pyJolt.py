@@ -77,41 +77,41 @@ class pyJolt(wx.Frame):
 
         toolBar = self.CreateToolBar()
 
-        newConfigItem = toolBar.AddLabelTool(-1, 'New Ignition Configuration', wx.Bitmap('pyJolt/resources/images/tools/new.bmp'), wx.NullBitmap, shortHelp='New Ignition Configuration')
+        newConfigItem = toolBar.AddTool(-1, 'New Ignition Configuration', wx.Bitmap('pyJolt/resources/images/tools/new.bmp'), wx.NullBitmap, shortHelp='New Ignition Configuration')
         self.Bind(wx.EVT_TOOL, self.onNewConfig, newConfigItem)
 
-        openConfigItem = toolBar.AddLabelTool(-1, 'Open', wx.Bitmap('pyJolt/resources/images/tools/open.bmp'), wx.NullBitmap, shortHelp='Open')
+        openConfigItem = toolBar.AddTool(-1, 'Open', wx.Bitmap('pyJolt/resources/images/tools/open.bmp'), wx.NullBitmap, shortHelp='Open')
         self.Bind(wx.EVT_TOOL, self.onOpenConfig, openConfigItem)
 
         toolBar.AddSeparator()
 
-        saveConfigItem = toolBar.AddLabelTool(-1, 'Save', wx.Bitmap('pyJolt/resources/images/tools/save.bmp'), wx.NullBitmap, shortHelp='Save')
+        saveConfigItem = toolBar.AddTool(-1, 'Save', wx.Bitmap('pyJolt/resources/images/tools/save.bmp'), wx.NullBitmap, shortHelp='Save')
         saveConfigItem.Enable(False)
         self.Bind(wx.EVT_TOOL, self.onSaveConfig, saveConfigItem)
 
-        saveAsConfigItem = toolBar.AddLabelTool(-1, 'Save As', wx.Bitmap('pyJolt/resources/images/tools/saveas.bmp'), wx.NullBitmap,shortHelp='Save As')
+        saveAsConfigItem = toolBar.AddTool(-1, 'Save As', wx.Bitmap('pyJolt/resources/images/tools/saveas.bmp'), wx.NullBitmap,shortHelp='Save As')
         self.Bind(wx.EVT_TOOL, self.onSaveAsConfig, saveAsConfigItem)
 
         toolBar.AddSeparator()
 
-        getConfigItem = toolBar.AddLabelTool(-1, 'Get Ignition Configuration', wx.Bitmap('pyJolt/resources/images/tools/getconfig.bmp'), wx.NullBitmap, shortHelp='Get Ignition Configuration')
+        getConfigItem = toolBar.AddTool(-1, 'Get Ignition Configuration', wx.Bitmap('pyJolt/resources/images/tools/getconfig.bmp'), wx.NullBitmap, shortHelp='Get Ignition Configuration')
         self.Bind(wx.EVT_TOOL, self.onGetConfig, getConfigItem)
 
-        writeConfigItem = toolBar.AddLabelTool(-1, 'Write Ignition Configuration', wx.Bitmap('pyJolt/resources/images/tools/writeconfig.bmp'), wx.NullBitmap, shortHelp='Write Ignition Configuration')
+        writeConfigItem = toolBar.AddTool(-1, 'Write Ignition Configuration', wx.Bitmap('pyJolt/resources/images/tools/writeconfig.bmp'), wx.NullBitmap, shortHelp='Write Ignition Configuration')
         self.Bind(wx.EVT_TOOL, self.onWriteConfig, writeConfigItem)
 
-        commitConfigItem = toolBar.AddLabelTool(-1, 'Commit Configuration to Flash', emptyBitmap, wx.NullBitmap, shortHelp='Commit Configuration to Flash')
+        commitConfigItem = toolBar.AddTool(-1, 'Commit Configuration to Flash', emptyBitmap, wx.NullBitmap, shortHelp='Commit Configuration to Flash')
         self.Bind(wx.EVT_TOOL, self.onCommitConfig, commitConfigItem)
 
         toolBar.AddSeparator()
 
-        editConfigItem = toolBar.AddLabelTool(-1, 'Edit Ignition Configuration', emptyBitmap, wx.NullBitmap, shortHelp='Edit Ignition Configuration')
+        editConfigItem = toolBar.AddTool(-1, 'Edit Ignition Configuration', emptyBitmap, wx.NullBitmap, shortHelp='Edit Ignition Configuration')
         self.Bind(wx.EVT_TOOL, self.onConfigPerspective, editConfigItem)
 
-        runtimeItem = toolBar.AddLabelTool(-1, 'Charting/Runtime View', emptyBitmap, wx.NullBitmap, shortHelp='Charting/Runtime View')
+        runtimeItem = toolBar.AddTool(-1, 'Charting/Runtime View', emptyBitmap, wx.NullBitmap, shortHelp='Charting/Runtime View')
         self.Bind(wx.EVT_TOOL, self.onRuntimePerspective, runtimeItem)
 
-        tuningItem = toolBar.AddLabelTool(-1, 'Tuning', emptyBitmap, wx.NullBitmap, shortHelp='Tuning')
+        tuningItem = toolBar.AddTool(-1, 'Tuning', emptyBitmap, wx.NullBitmap, shortHelp='Tuning')
         self.Bind(wx.EVT_TOOL, self.onTuningPerspective, tuningItem)
 
     def createMenus(self):
