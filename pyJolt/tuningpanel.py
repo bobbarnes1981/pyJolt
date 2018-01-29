@@ -1,4 +1,6 @@
 import wx
+import time
+from threading import *
 import wx.glcanvas
 from OpenGL.GL import *
 
@@ -14,6 +16,10 @@ class TuningPanel(wx.glcanvas.GLCanvas):
         self.Bind(wx.EVT_ERASE_BACKGROUND, self.onEraseBackground)
         self.Bind(wx.EVT_SIZE, self.onSize)
         self.Bind(wx.EVT_PAINT, self.onPaint)
+
+        self.running = True
+        self.timer = Timer(0, self.updateData)        
+        self.timer.start()
 
     def onEraseBackground(self, event):
         pass
@@ -66,3 +72,8 @@ class TuningPanel(wx.glcanvas.GLCanvas):
         glEnd()
 
         self.SwapBuffers()
+
+    def updateData(self):
+        while(self.running):
+            time.sleep(1)
+
