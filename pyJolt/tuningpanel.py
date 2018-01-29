@@ -63,22 +63,58 @@ class TuningPanel(wx.glcanvas.GLCanvas):
 	glClearColor(0, 0, 0, 1)
        	glClear(GL_COLOR_BUFFER_BIT)
 
+        glPushMatrix()
+
+        glRotate(10, 1, 1, 0)
+
         glBegin(GL_LINES)
+
+        # base
+
+        glColor(1, 0, 0)
+
+        glVertex(-0.5, -0.5, -0.5) # left - right
+        glVertex(0.5, -0.5, -0.5)
+        
+        glVertex(0.5, -0.5, -0.5) # front - back
+        glVertex(0.5, -0.5, 0.5)
+
+        glVertex(0.5, -0.5, 0.5) # right - left
+        glVertex(-0.5, -0.5, 0.5)
+
+        glVertex(-0.5, -0.5, 0.5) # back - front
+        glVertex(-0.5, -0.5, -0.5)
+
+        # back wall
+
+        glColor(0, 1, 0)
+
+        glVertex(0.5, 0.5, -0.5) # right - left
+        glVertex(-0.5, 0.5, -0.5)
+
         glColor(0.3, 0.3, 0.3)
 
-        glVertex(0, -0.5, -0.5)
-        glVertex(0.5, 0, 0)
-        
-        glVertex(0.5, 0, 0)
-        glVertex(0, 0.5, 0.5)
+        glVertex(-0.5, 0.5, -0.5)
+        glVertex(-0.5, -0.5, -0.5)
 
-        glVertex(0, 0.5, 0.5)
-        glVertex(-0.5, 0, 0)
+        # right wall
 
-        glVertex(-0.5, 0, 0)
-        glVertex(0, -0.5, -0.5)
+        glColor(0, 0, 1)
+
+        glVertex(0.5, 0.5, -0.5) # front - back
+        glVertex(0.5, 0.5, 0.5)
+
+        glColor(0.3, 0.3, 0.3)
+
+        glVertex(0.5, 0.5, -0.5)
+        glVertex(0.5, -0.5, -0.5)
+
+        glVertex(0.5, 0.5, 0.5)
+        glVertex(0.5, -0.5, 0.5)
 
         glEnd()
+
+        glPopMatrix()
 
         self.SwapBuffers()
 
