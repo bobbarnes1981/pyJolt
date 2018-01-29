@@ -71,12 +71,12 @@ class RuntimePanel(wx.glcanvas.GLCanvas):
 
         glBegin(GL_LINES)
         glColor(0.3, 0.3, 0.3)
-        for x in [-1, -0.5, 0, 0.5, 1]:
-            glVertex(x, -1)
-            glVertex(x, 1)
-        for y in [-1, -0.5, 0, 0.5, 1]:
-            glVertex(-1, y)
-            glVertex(1, y)
+        for x in range(-10, 10, 1):
+            glVertex(x/10.0, -1)
+            glVertex(x/10.0, 1)
+        for y in range(-10, 10, 1):
+            glVertex(-1, y/10.0)
+            glVertex(1, y/10.0)
         glEnd()
 
         # Drawing an example triangle in the middle of the screen
