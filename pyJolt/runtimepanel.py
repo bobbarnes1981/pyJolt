@@ -79,14 +79,6 @@ class RuntimePanel(wx.glcanvas.GLCanvas):
             glVertex(1, y/10.0)
         glEnd()
 
-        # Drawing an example triangle in the middle of the screen
-        glBegin(GL_TRIANGLES)
-        glColor(1, 0, 0)
-        glVertex(-.25, -.25)
-        glVertex(.25, -.25)
-        glVertex(0, .25)
-        glEnd()
-
         self.SwapBuffers()
 
     def updateData(self):

@@ -63,12 +63,21 @@ class TuningPanel(wx.glcanvas.GLCanvas):
 	glClearColor(0, 0, 0, 1)
        	glClear(GL_COLOR_BUFFER_BIT)
 
-        # Drawing an example triangle in the middle of the screen
-        glBegin(GL_TRIANGLES)
-        glColor(1, 0, 0)
-        glVertex(-.25, -.25)
-        glVertex(.25, -.25)
-        glVertex(0, .25)
+        glBegin(GL_LINES)
+        glColor(0.3, 0.3, 0.3)
+
+        glVertex(0, -0.5, -0.5)
+        glVertex(0.5, 0, 0)
+        
+        glVertex(0.5, 0, 0)
+        glVertex(0, 0.5, 0.5)
+
+        glVertex(0, 0.5, 0.5)
+        glVertex(-0.5, 0, 0)
+
+        glVertex(-0.5, 0, 0)
+        glVertex(0, -0.5, -0.5)
+
         glEnd()
 
         self.SwapBuffers()
