@@ -1,5 +1,9 @@
 #ToDo
 
+Use OpenGL for tuning?
+
+Use OpenGL for runtime?
+
 Tools menu
 
     Configurator Options - Logic
