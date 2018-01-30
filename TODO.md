@@ -1,7 +1,5 @@
 #ToDo
 
-Convert Tuning to coloured squares/triangles
-
 Draw runtime graphs
 
 Tools menu

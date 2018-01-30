@@ -113,18 +113,6 @@ class TuningPanel(wx.glcanvas.GLCanvas):
         glVertex(maxX, maxY, 0.5)
         glVertex(maxX, minY, 0.5)
 
-        # data
-
-        if self.conf:
-            for z in range(0, 10):
-                for x in range(0, 9):
-                    colour = AdvanceColours.colours[self.conf.advance[z][x]]
-                    glColor(colour.red/255.0, colour.green/255.0, colour.blue/255.0)
-                    glVertex(-0.5+((x+1)/10.0), -0.5+((self.conf.advance[z][x]/59.0)), -0.5+((z+1)/10.0))
-                    colour = AdvanceColours.colours[self.conf.advance[z][x+1]]
-                    glColor(colour.red/255.0, colour.green/255.0, colour.blue/255.0)
-                    glVertex(-0.5+((x+2)/10.0), -0.5+((self.conf.advance[z][x+1]/59.0)), -0.5+((z+1)/10.0))
-
         # lines
 
         glColor(1, 0, 0)
@@ -139,9 +127,46 @@ class TuningPanel(wx.glcanvas.GLCanvas):
 
         glEnd()
 
+        # data
+
+        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)
+        glBegin(GL_TRIANGLES)
+        self.drawVertexes(False)
+        glEnd()
+
+        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE)
+        glBegin(GL_TRIANGLES)
+        self.drawVertexes(True)
+        glEnd()
+
         glPopMatrix()
 
         self.SwapBuffers()
+
+    def drawVertexes(self, black):
+        if self.conf:
+            for z in range(0, 9):
+                for x in range(0, 9):
+                    #left back
+                    self.drawVertex(x, z, 0, 0, black)
+                    #left front
+                    self.drawVertex(x, z, 0, 1, black)
+                    #right front
+                    self.drawVertex(x, z, 1, 1, black)
+                    #right front
+                    self.drawVertex(x, z, 1, 1, black)
+                    #right back
+                    self.drawVertex(x, z, 1, 0, black)
+                    #left back
+                    self.drawVertex(x, z, 0, 0, black)
+
+    def drawVertex(self, x, z, xo, zo, black):
+        if black:
+            glColor(0, 0, 0)
+        else:
+            colour = AdvanceColours.colours[self.conf.advance[z+zo][x+xo]]
+            glColor(colour.red/255.0, colour.green/255.0, colour.blue/255.0)
+        glVertex(-0.5+((x+1+xo)/10.0), -0.5+((self.conf.advance[z+zo][x+xo]/59.0)), -0.5+((z+1+zo)/10.0))
 
     def updateData(self):
         while(self.running):
