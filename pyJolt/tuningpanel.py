@@ -172,6 +172,7 @@ class TuningPanel(wx.glcanvas.GLCanvas):
 
     def updateData(self):
         while(self.running):
+
             time.sleep(1)
 
     def setConfiguration(self, conf):

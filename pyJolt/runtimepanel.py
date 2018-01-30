@@ -70,6 +70,7 @@ class RuntimePanel(wx.glcanvas.GLCanvas):
        	glClear(GL_COLOR_BUFFER_BIT)
 
         glBegin(GL_LINES)
+
         glColor(0.3, 0.3, 0.3)
         for x in range(-10, 10, 1):
             glVertex(x/10.0, -1)
@@ -77,17 +78,22 @@ class RuntimePanel(wx.glcanvas.GLCanvas):
         for y in range(-10, 10, 1):
             glVertex(-1, y/10.0)
             glVertex(1, y/10.0)
+        
+        glColor(1, 0, 0)
+        for k in self.data.keys():
+            data = self.data[k]
+            for i in range(0, len(data)-1):
+                glVertex(-1 + (i/10.0), data[i]/10.0)
+                glVertex(-1 + ((i+1)/10.0), data[i+1]/10.0)
+        
         glEnd()
 
         self.SwapBuffers()
 
     def updateData(self):
         while(self.running):
-
             for k in self.data.keys():
                 self.data[k] = self.rotate(self.data[k])
-
-            self.onDraw()
 
             time.sleep(1)
 
