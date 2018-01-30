@@ -3,6 +3,7 @@ import time
 from threading import *
 import wx.glcanvas
 from OpenGL.GL import *
+from advancecolours import AdvanceColours
 
 class TuningPanel(wx.glcanvas.GLCanvas):
 
@@ -68,59 +69,60 @@ class TuningPanel(wx.glcanvas.GLCanvas):
         glPushMatrix()
 
         glRotate(10, 1, 1, 0)
-        #glRotate(10, 1, 0, 1)
 
         glBegin(GL_LINES)
 
+        minX = -0.4
+        maxX = 0.5
+        minY = -0.5
+        maxY = 0.5
+
         # base
 
-        glColor(1, 0, 0)
-
-        glVertex(-0.5, -0.5, -0.5) # left - right
-        glVertex(0.5, -0.5, -0.5)
-        
-        glVertex(0.5, -0.5, -0.5) # front - back
-        glVertex(0.5, -0.5, 0.5)
-
-        glVertex(0.5, -0.5, 0.5) # right - left
-        glVertex(-0.5, -0.5, 0.5)
-
-        glVertex(-0.5, -0.5, 0.5) # back - front
-        glVertex(-0.5, -0.5, -0.5)
+        glColor(0.3, 0.3, 0.3)
+        glVertex(minX, minY, -0.5) # left - right
+        glVertex(maxX, minY, -0.5)
+        glVertex(maxX, minY, -0.5) # front - back
+        glVertex(maxX, minY, 0.5)
+        glVertex(maxX, minY, 0.5) # right - left
+        glVertex(minX, minY, 0.5)
+        glVertex(minX, minY, 0.5) # back - front
+        glVertex(minX, minY, -0.5)
 
         # back wall
 
-        glColor(0, 1, 0)
-
-        glVertex(0.5, 0.5, -0.5) # right - left
-        glVertex(-0.5, 0.5, -0.5)
+        glColor(0.3, 0.3, 0.3)
+        glVertex(maxX, maxY, -0.5) # right - left
+        glVertex(minX, maxY, -0.5)
 
         glColor(0.3, 0.3, 0.3)
-
-        glVertex(-0.5, 0.5, -0.5)
-        glVertex(-0.5, -0.5, -0.5)
+        glVertex(minX, maxY, -0.5)
+        glVertex(minX, minY, -0.5)
 
         # right wall
 
-        glColor(0, 0, 1)
-
-        glVertex(0.5, 0.5, -0.5) # front - back
-        glVertex(0.5, 0.5, 0.5)
+        glColor(0.3, 0.3, 0.3)
+        glVertex(maxX, maxY, -0.5) # front - back
+        glVertex(maxX, maxY, 0.5)
 
         glColor(0.3, 0.3, 0.3)
+        glVertex(maxX, maxY, -0.5)
+        glVertex(maxX, minY, -0.5)
 
-        glVertex(0.5, 0.5, -0.5)
-        glVertex(0.5, -0.5, -0.5)
-
-        glVertex(0.5, 0.5, 0.5)
-        glVertex(0.5, -0.5, 0.5)
+        glColor(0.3, 0.3, 0.3)
+        glVertex(maxX, maxY, 0.5)
+        glVertex(maxX, minY, 0.5)
 
         # data
 
         if self.conf:
-            for z in range(0, 9):
+            for z in range(0, 10):
                 for x in range(0, 9):
+                    colour = AdvanceColours.colours[self.conf.advance[z][x]]
+                    glColor(colour.red/255.0, colour.green/255.0, colour.blue/255.0)
                     glVertex(-0.5+((x+1)/10.0), -0.5+((self.conf.advance[z][x]/59.0)), -0.5+((z+1)/10.0))
+                    colour = AdvanceColours.colours[self.conf.advance[z][x+1]]
+                    glColor(colour.red/255.0, colour.green/255.0, colour.blue/255.0)
                     glVertex(-0.5+((x+2)/10.0), -0.5+((self.conf.advance[z][x+1]/59.0)), -0.5+((z+1)/10.0))
 
         # lines
