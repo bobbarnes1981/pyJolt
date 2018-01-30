@@ -11,6 +11,8 @@ class TuningPanel(wx.glcanvas.GLCanvas):
 
         self.parent = parent
 
+        self.conf = None
+
         self.GLInitialized = False
 
         self.Bind(wx.EVT_ERASE_BACKGROUND, self.onEraseBackground)
@@ -66,6 +68,7 @@ class TuningPanel(wx.glcanvas.GLCanvas):
         glPushMatrix()
 
         glRotate(10, 1, 1, 0)
+        #glRotate(10, 1, 0, 1)
 
         glBegin(GL_LINES)
 
@@ -112,6 +115,26 @@ class TuningPanel(wx.glcanvas.GLCanvas):
         glVertex(0.5, 0.5, 0.5)
         glVertex(0.5, -0.5, 0.5)
 
+        # data
+
+        if self.conf:
+            for z in range(0, 9):
+                for x in range(0, 9):
+                    glVertex(-0.5+((x+1)/10.0), -0.5+((self.conf.advance[z][x]/59.0)), -0.5+((z+1)/10.0))
+                    glVertex(-0.5+((x+2)/10.0), -0.5+((self.conf.advance[z][x+1]/59.0)), -0.5+((z+1)/10.0))
+
+        # lines
+
+        glColor(1, 0, 0)
+        glVertex(-0.75, 0, 0)
+        glVertex(-0.5, 0, 0) #X
+        glColor(0, 1, 0)
+        glVertex(-0.75, 0, 0)
+        glVertex(-0.75, 0.25, 0) #Y
+        glColor(0, 0, 1)
+        glVertex(-0.75, 0, 0)
+        glVertex(-0.75, 0, 0.25) #Z
+
         glEnd()
 
         glPopMatrix()
@@ -122,3 +145,5 @@ class TuningPanel(wx.glcanvas.GLCanvas):
         while(self.running):
             time.sleep(1)
 
+    def setConfiguration(self, conf):
+        self.conf = conf
