@@ -76,42 +76,44 @@ class TuningPanel(wx.glcanvas.GLCanvas):
         maxX = 0.5
         minY = -0.5
         maxY = 0.5
+        minZ = -0.8
+        maxZ = 1
 
         # base
 
         glColor(0.3, 0.3, 0.3)
-        glVertex(minX, minY, -0.5) # left - right
-        glVertex(maxX, minY, -0.5)
-        glVertex(maxX, minY, -0.5) # front - back
-        glVertex(maxX, minY, 0.5)
-        glVertex(maxX, minY, 0.5) # right - left
-        glVertex(minX, minY, 0.5)
-        glVertex(minX, minY, 0.5) # back - front
-        glVertex(minX, minY, -0.5)
+        glVertex(minX, minY, minZ) # left - right
+        glVertex(maxX, minY, minZ)
+        glVertex(maxX, minY, minZ) # front - back
+        glVertex(maxX, minY, maxZ)
+        glVertex(maxX, minY, maxZ) # right - left
+        glVertex(minX, minY, maxZ)
+        glVertex(minX, minY, maxZ) # back - front
+        glVertex(minX, minY, minZ)
 
         # back wall
 
         glColor(0.3, 0.3, 0.3)
-        glVertex(maxX, maxY, -0.5) # right - left
-        glVertex(minX, maxY, -0.5)
+        glVertex(maxX, maxY, minZ) # right - left
+        glVertex(minX, maxY, minZ)
 
         glColor(0.3, 0.3, 0.3)
-        glVertex(minX, maxY, -0.5)
-        glVertex(minX, minY, -0.5)
+        glVertex(minX, maxY, minZ)
+        glVertex(minX, minY, minZ)
 
         # right wall
 
         glColor(0.3, 0.3, 0.3)
-        glVertex(maxX, maxY, -0.5) # front - back
-        glVertex(maxX, maxY, 0.5)
+        glVertex(maxX, maxY, minZ) # front - back
+        glVertex(maxX, maxY, maxZ)
 
         glColor(0.3, 0.3, 0.3)
-        glVertex(maxX, maxY, -0.5)
-        glVertex(maxX, minY, -0.5)
+        glVertex(maxX, maxY, minZ)
+        glVertex(maxX, minY, minZ)
 
         glColor(0.3, 0.3, 0.3)
-        glVertex(maxX, maxY, 0.5)
-        glVertex(maxX, minY, 0.5)
+        glVertex(maxX, maxY, maxZ)
+        glVertex(maxX, minY, maxZ)
 
         # lines
 
@@ -166,7 +168,7 @@ class TuningPanel(wx.glcanvas.GLCanvas):
         else:
             colour = AdvanceColours.colours[self.conf.advance[z+zo][x+xo]]
             glColor(colour.red/255.0, colour.green/255.0, colour.blue/255.0)
-        glVertex(-0.5+((x+1+xo)/10.0), -0.5+((self.conf.advance[z+zo][x+xo]/59.0)), -0.5+((z+1+zo)/10.0))
+        glVertex(-0.5+((x+1+xo)/10.0), -0.5+((self.conf.advance[z+zo][x+xo]/59.0)), -1+((z+1+zo)/5.0))
 
     def updateData(self):
         while(self.running):
