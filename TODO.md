@@ -1,8 +1,8 @@
 #ToDo
 
-Use OpenGL for tuning?
+Convert Tuning to coloured squares/triangles
 
-Use OpenGL for runtime?
+Draw runtime graphs
 
 Tools menu
 
