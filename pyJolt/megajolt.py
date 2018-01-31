@@ -103,3 +103,24 @@ class Communication():
     def __init__(self):
         pass
 
+    def getState(self):
+        return State()
+
+class State():
+
+    def __init__(self):
+        self.advance = 0
+        self.rpm = 0
+        self.rpmBin = 0
+        self.loadBin = 0
+        self.load = 0
+        self.userOut = [
+            False, False, False, False
+        ]
+        self.RevLimit = False
+        self.shiftLight = False
+        self.config = 0
+        self.aux = 0
+        self.correctionBin = 0
+        self.correctionDegrees = 0
+

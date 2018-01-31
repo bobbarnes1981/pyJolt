@@ -15,6 +15,8 @@ class pyJolt(wx.Frame):
     def __init__(self, *args, **kw):
         super(pyJolt, self).__init__(*args, **kw)
 
+        self.coms = megajolt.Communication()
+
         self.createMenus()
 
         self.createTools()
@@ -23,9 +25,9 @@ class pyJolt(wx.Frame):
 
         self.configPanel = configurationpanel.ConfigurationPanel(self)
         self.configPanel.Hide()
-        self.runtimePanel = runtimepanel.RuntimePanel(self)
+        self.runtimePanel = runtimepanel.RuntimePanel(self, self.coms)
         self.runtimePanel.Hide()
-        self.tuningPanel = tuningpanel.TuningPanel(self)
+        self.tuningPanel = tuningpanel.TuningPanel(self, self.coms)
         self.tuningPanel.Hide()
 
         sizer = wx.BoxSizer()

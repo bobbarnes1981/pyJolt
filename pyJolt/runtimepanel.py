@@ -8,13 +8,48 @@ import random
 
 class RuntimePanel(wx.glcanvas.GLCanvas):
 
-    def __init__(self, parent, *args, **kw):
+    def __init__(self, parent, coms, *args, **kw):
         wx.glcanvas.GLCanvas.__init__(self, parent, *args, **kw)
     
         self.parent = parent
+        self.coms = coms
 
         self.data = {
-            'rpm': [1,1,1,1,1,1,1,2,3,4,5]
+            'loadaccel': { #KPa/s
+                'data': [1,1,1,1,1,1,1,2,3,4,5],
+                'color': wx.Colour(0, 0, 255),
+                'update': self.calculateLoadAccel
+            },
+            'advance': { #Degrees
+                'data': [1,1,1,1,1,1,1,2,3,4,5],
+                'color': wx.Colour(0, 255, 0),
+                'update': self.getDegrees
+            },
+            'rpmaccel': { #RPM/s
+                'data': [1,1,1,1,1,1,1,2,3,4,5],
+                'color': wx.Colour(255, 255, 0),
+                'update': self.calculateRPMAccel
+            },
+            'load': { #KPa
+                'data': [1,1,1,1,1,1,1,2,3,4,5],
+                'color': wx.Colour(255, 255, 255),
+                'update': self.getLoad
+            },
+            'correction': { #Degrees
+                'data': [1,1,1,1,1,1,1,2,3,4,5],
+                'color': wx.Colour(247, 155, 72),
+                'update': self.getDegrees
+            },
+            'rpm': { #RPM
+                'data': [1,1,1,1,1,1,1,2,3,4,5],
+                'color': wx.Colour(255, 0, 0),
+                'update': self.getRPM
+            },
+            'aux': { #Water temp?
+                'data': [1,1,1,1,1,1,1,2,3,4,5],
+                'color': wx.Colour(255, 0, 255),
+                'update': self.getAux
+            },
         }
 
         self.GLInitialized = False
@@ -82,9 +117,11 @@ class RuntimePanel(wx.glcanvas.GLCanvas):
         glColor(1, 0, 0)
         for k in self.data.keys():
             data = self.data[k]
-            for i in range(0, len(data)-1):
-                glVertex(-1 + (i/10.0), data[i]/10.0)
-                glVertex(-1 + ((i+1)/10.0), data[i+1]/10.0)
+            for i in range(0, len(data['data'])-1):
+                colour = data['colour']
+                glColor(colour.red/255.0, colour.green/255.0, colour.blue/255.0)
+                glVertex(-1 + (i/10.0), data['data'][i]/10.0)
+                glVertex(-1 + ((i+1)/10.0), data['data'][i+1]/10.0)
         
         glEnd()
 
@@ -92,11 +129,35 @@ class RuntimePanel(wx.glcanvas.GLCanvas):
 
     def updateData(self):
         while(self.running):
+            self.state = self.coms.getState()
             for k in self.data.keys():
-                self.data[k] = self.rotate(self.data[k])
+                data = self.data[k]
+                newData = data['update']()
+                self.data[k]['data'] = self.rotate(data['data'], newData)
 
             time.sleep(1)
 
-    def rotate(self, l):
-        return l[-1:]+l[:-1]
+    def rotate(self, l, newData):
+        return l[-1:]+[newData]
+
+    def calculateLoadAccel(self):
+        return 0 #TODO
+
+    def getDegrees(self):
+        return self.state.degrees
+
+    def calculateRPMAccel(self):
+        return 0 # TODO
+
+    def getLoad(self):
+        return self.state.load
+
+    def getDegrees(self):
+        return self.state.degrees
+
+    def getRPM(self):
+        return self.state.rpm
+
+    def getAux(self):
+        return self.state.aux
 
