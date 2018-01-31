@@ -74,7 +74,7 @@ class pyJolt(wx.Frame):
             self.SetTitle('pyJolt - ' + self.filepath)
 
     def createTools(self):
-        emptyBitmap = wx.EmptyBitmap(16, 15, 16)
+        emptyBitmap = wx.Bitmap(16, 15, 16)
 
         toolBar = self.CreateToolBar()
 

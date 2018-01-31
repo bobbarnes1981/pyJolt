@@ -3,6 +3,7 @@ import time
 from threading import *
 import wx.glcanvas
 from OpenGL.GL import *
+from OpenGL.GLUT import *
 
 import random
 
@@ -17,37 +18,37 @@ class RuntimePanel(wx.glcanvas.GLCanvas):
         self.data = {
             'loadaccel': { #KPa/s
                 'data': [1,1,1,1,1,1,1,2,3,4,5],
-                'color': wx.Colour(0, 0, 255),
+                'colour': wx.Colour(0, 0, 255),
                 'update': self.calculateLoadAccel
             },
             'advance': { #Degrees
                 'data': [1,1,1,1,1,1,1,2,3,4,5],
-                'color': wx.Colour(0, 255, 0),
-                'update': self.getDegrees
+                'colour': wx.Colour(0, 255, 0),
+                'update': self.getAdvance
             },
             'rpmaccel': { #RPM/s
                 'data': [1,1,1,1,1,1,1,2,3,4,5],
-                'color': wx.Colour(255, 255, 0),
+                'colour': wx.Colour(255, 255, 0),
                 'update': self.calculateRPMAccel
             },
             'load': { #KPa
                 'data': [1,1,1,1,1,1,1,2,3,4,5],
-                'color': wx.Colour(255, 255, 255),
+                'colour': wx.Colour(255, 255, 255),
                 'update': self.getLoad
             },
             'correction': { #Degrees
                 'data': [1,1,1,1,1,1,1,2,3,4,5],
-                'color': wx.Colour(247, 155, 72),
-                'update': self.getDegrees
+                'colour': wx.Colour(247, 155, 72),
+                'update': self.getCorrection
             },
             'rpm': { #RPM
                 'data': [1,1,1,1,1,1,1,2,3,4,5],
-                'color': wx.Colour(255, 0, 0),
+                'colour': wx.Colour(255, 0, 0),
                 'update': self.getRPM
             },
             'aux': { #Water temp?
                 'data': [1,1,1,1,1,1,1,2,3,4,5],
-                'color': wx.Colour(255, 0, 255),
+                'colour': wx.Colour(255, 0, 255),
                 'update': self.getAux
             },
         }
@@ -138,13 +139,13 @@ class RuntimePanel(wx.glcanvas.GLCanvas):
             time.sleep(1)
 
     def rotate(self, l, newData):
-        return l[-1:]+[newData]
+        return l[-1:]+l[:-1]
 
     def calculateLoadAccel(self):
         return 0 #TODO
 
-    def getDegrees(self):
-        return self.state.degrees
+    def getAdvance(self):
+        return self.state.advance
 
     def calculateRPMAccel(self):
         return 0 # TODO
@@ -152,8 +153,8 @@ class RuntimePanel(wx.glcanvas.GLCanvas):
     def getLoad(self):
         return self.state.load
 
-    def getDegrees(self):
-        return self.state.degrees
+    def getCorrection(self):
+        return self.state.correctionDegrees
 
     def getRPM(self):
         return self.state.rpm
