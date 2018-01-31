@@ -45,9 +45,13 @@ class pyJolt(wx.Frame):
         self.auxOptions = auxiliaryinputoptions.AuxiliaryInputOptions(self)
         self.aboutPyJolt = aboutpyjolt.AboutPyJolt(self)
 
+        self.notSaved = False
+
         self.filepath = None
         self.conf = megajolt.Configuration()
         self.setConfiguration(self.conf)
+
+        self.Bind(wx.EVT_CLOSE, self.onClose, self)
 
     def showConfigPanel(self):
         self.configPanel.Show()
@@ -292,3 +296,10 @@ class pyJolt(wx.Frame):
         self.editBins.setConfiguration(conf)
         self.tuningPanel.setConfiguration(conf)
 
+    def onClose(self, event):
+        if self.notSaved:
+            #TODO: confirmation
+            return
+        self.tuningPanel.Close()
+        self.runtimePanel.Close()
+        self.Destroy()

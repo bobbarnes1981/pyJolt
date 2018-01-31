@@ -21,6 +21,8 @@ class TuningPanel(wx.glcanvas.GLCanvas):
         self.Bind(wx.EVT_SIZE, self.onSize)
         self.Bind(wx.EVT_PAINT, self.onPaint)
 
+        self.Bind(wx.EVT_CLOSE, self.onClose, self)
+
         self.running = True
         self.timer = Timer(0, self.updateData)        
         self.timer.start()
@@ -34,7 +36,7 @@ class TuningPanel(wx.glcanvas.GLCanvas):
             self.parent.Show()
             self.SetCurrent(context)
             size = self.GetClientSize()
-            self.onReshape(size.width, size.height)
+            self.OnReshape(size.width, size.height)
             self.Refresh(False)
         event.Skip()
     
@@ -44,16 +46,16 @@ class TuningPanel(wx.glcanvas.GLCanvas):
             self.SetCurrent(context)
 
         if not self.GLInitialized:
-            self.onInitGL()
+            self.OnInitGL()
             self.GLInitialized = True
 
-        self.onDraw()
+        self.OnDraw()
         event.Skip()
 
-    def onInitGL(self):
+    def OnInitGL(self):
         glClearColor(1, 1, 1, 1)
 
-    def onReshape(self, width, height):
+    def OnReshape(self, width, height):
         glViewport(0, 0, width, height)
 
         glMatrixMode(GL_PROJECTION)
@@ -63,7 +65,7 @@ class TuningPanel(wx.glcanvas.GLCanvas):
         glMatrixMode(GL_MODELVIEW)
         glLoadIdentity()
 
-    def onDraw(self, *args, **kw):
+    def OnDraw(self, *args, **kw):
 	glClearColor(0, 0, 0, 1)
        	glClear(GL_COLOR_BUFFER_BIT)
 
@@ -174,7 +176,14 @@ class TuningPanel(wx.glcanvas.GLCanvas):
     def updateData(self):
         while(self.running):
 
+            if bool(self):
+                self.Refresh()
             time.sleep(1)
 
     def setConfiguration(self, conf):
         self.conf = conf
+
+    def onClose(self, event):
+        self.running = False
+        self.Destroy()
+
