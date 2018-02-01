@@ -130,9 +130,11 @@ class RuntimePanel(wx.glcanvas.GLCanvas):
 
         self.SwapBuffers()
 
+    def setState(self, state):
+        self.state = state
+
     def updateData(self):
         while(self.running):
-            self.state = self.coms.getState()
             for k in self.data.keys():
                 data = self.data[k]
                 newData = data['update']()

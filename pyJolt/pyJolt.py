@@ -15,13 +15,25 @@ class pyJolt(wx.Frame):
     def __init__(self, *args, **kw):
         super(pyJolt, self).__init__(*args, **kw)
 
-        self.coms = megajolt.Communication()
-
         self.createMenus()
 
         self.createTools()
 
         self.CreateStatusBar()
+
+        # TODO: load options?
+
+        self.editBins = editrpmloadbins.EditRpmLoadBins(self)
+        self.cOptions = configuratoroptions.ConfiguratorOptions(self)
+        self.gcOptions = globalcontrolleroptions.GlobalControllerOptions(self)
+        self.laCalibration = loadaxiscalibration.LoadAxisCalibration(self)
+        self.auxOptions = auxiliaryinputoptions.AuxiliaryInputOptions(self)
+        self.aboutPyJolt = aboutpyjolt.AboutPyJolt(self)
+
+        self.setOptions(self.cOptions.options)
+        self.coms = megajolt.Communication(self.option.comPort)
+        if self.options.autoRead:
+            self.readConfig()
 
         self.configPanel = configurationpanel.ConfigurationPanel(self)
         self.configPanel.Hide()
@@ -38,15 +50,6 @@ class pyJolt(wx.Frame):
 
         self.showConfigPanel()
 
-        self.editBins = editrpmloadbins.EditRpmLoadBins(self)
-        self.cOptions = configuratoroptions.ConfiguratorOptions(self)
-        self.gcOptions = globalcontrolleroptions.GlobalControllerOptions(self)
-        self.laCalibration = loadaxiscalibration.LoadAxisCalibration(self)
-        self.auxOptions = auxiliaryinputoptions.AuxiliaryInputOptions(self)
-        self.aboutPyJolt = aboutpyjolt.AboutPyJolt(self)
-
-        self.setOptions(self.cOptions.options)
-
         self.notSaved = False
 
         self.filepath = None
@@ -54,6 +57,30 @@ class pyJolt(wx.Frame):
         self.setConfiguration(self.conf)
 
         self.Bind(wx.EVT_CLOSE, self.onClose, self)
+
+        self.running = True
+        self.timer = Timer(0, self.updateState)        
+        self.timer.start()
+
+    def updateState(self):
+        while(self.running):
+            newState = self.coms.getState()
+            if not newState.config == self.state.config:
+                self.configSwitched()
+            self.state = newState
+            time.sleep(1)
+
+    def readConfig(self):
+        self.conf = self.coms.getIgnitionConfiguration()
+        self.setConfiguration(self.conf)
+
+    def configSwitched(self):
+        if not self.options.action == 0:
+            if self.options.action == 1:
+                #TODO: show confirmation
+                return
+            # option must be 2 or 1+confirmed
+            self.readConfig()
 
     def showConfigPanel(self):
         self.configPanel.Show()
@@ -303,6 +330,7 @@ class pyJolt(wx.Frame):
         if self.notSaved:
             #TODO: confirmation
             return
+        self.running = False
         self.tuningPanel.Close()
         self.runtimePanel.Close()
         self.Destroy()

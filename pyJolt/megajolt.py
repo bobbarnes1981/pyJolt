@@ -104,7 +104,12 @@ class Communication():
         pass
 
     def getState(self):
+        #TODO: get real state
         return State()
+
+    def getIgnitionConfiguration(self):
+        #TODO: get real configuration
+        return Configuration()
 
 class State():
 
