@@ -9,11 +9,12 @@ import random
 
 class RuntimePanel(wx.glcanvas.GLCanvas):
 
-    def __init__(self, parent, coms, *args, **kw):
+    def __init__(self, parent, *args, **kw):
         wx.glcanvas.GLCanvas.__init__(self, parent, *args, **kw)
     
         self.parent = parent
-        self.coms = coms
+
+        self.state = None
 
         self.data = {
             'loadaccel': { #KPa/s
@@ -135,13 +136,14 @@ class RuntimePanel(wx.glcanvas.GLCanvas):
 
     def updateData(self):
         while(self.running):
-            for k in self.data.keys():
-                data = self.data[k]
-                newData = data['update']()
-                self.data[k]['data'] = self.rotate(data['data'], newData)
+            if self.state:
+                for k in self.data.keys():
+                    data = self.data[k]
+                    newData = data['update']()
+                    self.data[k]['data'] = self.rotate(data['data'], newData)
 
-            if bool(self):
-                self.Refresh()
+                if bool(self):
+                    self.Refresh()
             time.sleep(1)
 
     def rotate(self, l, newData):

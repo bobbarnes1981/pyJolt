@@ -1,4 +1,5 @@
 import wx
+import time
 import configurationpanel
 import runtimepanel
 import tuningpanel
@@ -9,11 +10,14 @@ import globalcontrolleroptions
 import loadaxiscalibration
 import auxiliaryinputoptions
 import aboutpyjolt
+from threading import *
 
 class pyJolt(wx.Frame):
 
     def __init__(self, *args, **kw):
         super(pyJolt, self).__init__(*args, **kw)
+
+        self.state = None
 
         self.createMenus()
 
@@ -30,16 +34,16 @@ class pyJolt(wx.Frame):
         self.auxOptions = auxiliaryinputoptions.AuxiliaryInputOptions(self)
         self.aboutPyJolt = aboutpyjolt.AboutPyJolt(self)
 
+        self.configPanel = configurationpanel.ConfigurationPanel(self)
+        self.configPanel.Hide()
+        self.runtimePanel = runtimepanel.RuntimePanel(self)
+        self.runtimePanel.Hide()
+        self.tuningPanel = tuningpanel.TuningPanel(self)
+        self.tuningPanel.Hide()
+
         self.setOptions(self.cOptions.options)
         if self.options.autoRead:
             self.readConfig()
-
-        self.configPanel = configurationpanel.ConfigurationPanel(self)
-        self.configPanel.Hide()
-        self.runtimePanel = runtimepanel.RuntimePanel(self, self.coms)
-        self.runtimePanel.Hide()
-        self.tuningPanel = tuningpanel.TuningPanel(self, self.coms)
-        self.tuningPanel.Hide()
 
         sizer = wx.BoxSizer()
         sizer.Add(self.configPanel, 1, wx.EXPAND)
@@ -64,9 +68,10 @@ class pyJolt(wx.Frame):
     def updateState(self):
         while(self.running):
             newState = self.coms.getState()
-            if not newState.config == self.state.config:
+            if self.state and not newState.config == self.state.config:
                 self.configSwitched()
             self.state = newState
+            self.runtimePanel.setState(self.state)
             time.sleep(1)
 
     def readConfig(self):
@@ -336,16 +341,7 @@ class pyJolt(wx.Frame):
 
     def setOptions(self, options):
         self.options = options
-        self.coms = megajolt.Communication(self.option.comPort)
+        self.coms = megajolt.Communication(self.options.comPort)
         self.gcOptions.setCommunication(self.coms)
         #TODO: save?
-
-class Options():
-
-    def __init__(self, comPort, autoRead, action, loadType, normallyAspirated):
-        self.comPort = comPort
-        self.autoRead = autoRead
-        self.action = action
-        self.loadType = loadType
-        self.normallyAspirated = normallyAspirated
 

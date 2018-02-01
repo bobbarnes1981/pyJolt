@@ -7,11 +7,10 @@ from advancecolours import AdvanceColours
 
 class TuningPanel(wx.glcanvas.GLCanvas):
 
-    def __init__(self, parent, coms, *args, **kw):
+    def __init__(self, parent, *args, **kw):
         wx.glcanvas.GLCanvas.__init__(self, parent, *args, **kw)
 
         self.parent = parent
-        self.coms = coms
 
         self.conf = None
 

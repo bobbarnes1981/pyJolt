@@ -79,16 +79,25 @@ class ConfiguratorOptions(wx.Dialog):
 
     def onOkButton(self, commandEvent):
         self.setOptions()
-        self.SetReturnCOde(wx._ID_OK)
+        self.SetReturnCode(wx.ID_OK)
         self.Hide()
 
     def onCancelButton(self, commandEvent):
-        self.SetReturnCOde(wx._ID_CANCEL)
+        self.SetReturnCode(wx.ID_CANCEL)
         self.Hide()
 
-    def loadChanged(self, commandEvent):
+    def onLoadChanged(self, commandEvent):
         if self.loadCombo.GetSelection() == 1:
             self.naCheck.Disable()
         else:
             self.naCheck.Enable()
+
+class Options():
+
+    def __init__(self, comPort, autoRead, action, loadType, normallyAspirated):
+        self.comPort = comPort
+        self.autoRead = autoRead
+        self.action = action
+        self.loadType = loadType
+        self.normallyAspirated = normallyAspirated
 
