@@ -280,6 +280,8 @@ class pyJolt(wx.Frame):
 
     def onEditBins(self, menuEvent):
         self.editBins.ShowModal()
+        #TODO: if OK then update bins from conf?
+        #      is it already done through reference?
 
     def onOpenConfig(self, menuEvent):
         with wx.FileDialog(self, "Open Ignition Configuration", wildcard="MJLJ Configuration Files (*.mjlj)|*.mjlj", style=wx.FD_OPEN | wx.FD_FILE_MUST_EXIST) as fileDialog:

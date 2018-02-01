@@ -102,13 +102,41 @@ class Communication():
 
     def __init__(self, comPort):
         self.comPort = comPort
+        self.baudRate = 38400
+        self.bytesize = 8
+        self.parity = serial.PARITY_NONE
+        self.stopBits = 1
+
+    def makeRequest(self, char, length):
+        with serial.Serial(self.comPort, aelf.baudRate, bytesize=self.biteSize, parity=self.parity, stopbits=self.stopBits) as ser:
+            ser.write(char)
+            return ser.read(length)
 
     def getVersion(self):
-        return None
+        res = self.makeRequest(b'V', 3)
+        return '{0}.{1}.{2}'.format(res[0], res[1], res[2])
 
     def getState(self):
-        #TODO: get real state
-        return State()
+        res = self.makeRequest(b'S', 9)
+        state = State()
+        state.advance = res[0]
+        state.rpm = (res[1]<<8)|(res[2]) # High byte | low byte
+        state.rpmBin = res[3]>>4 # high 4 bits
+        state.loadBin = res[3]|0x0F # low 4 bits
+        state.load = res[4]
+        state.userOut = [
+            (res[5]>>0)|0x01 == 0x01,
+            (res[5]>>1)|0x01 == 0x01,
+            (res[5]>>2)|0x01 == 0x01,
+            (res[5]>>3)|0x01 == 0x01,
+        ]
+        state.revLimit = (res[5]>>4)|0x01 == 0x01
+        state.shiftLight = (res[5]>>5)|0x01 == 0x01
+        state.config = 0 if (res[5]>>7)|0x01 == 0x01 else 1
+        state.aux = res[6]
+        state.correctionBin = res[7]
+        state.correctionDegrees = res[8]
+        return state
 
     def getIgnitionConfiguration(self):
         #TODO: get real configuration
