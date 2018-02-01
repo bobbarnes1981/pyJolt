@@ -6,10 +6,6 @@ Draw runtime graphs
 
 Tools menu
 
-    Configurator Options - Logic
-    
-    Global Controller Options - Logic
-    
     Load Axis Calibration
         
         UI

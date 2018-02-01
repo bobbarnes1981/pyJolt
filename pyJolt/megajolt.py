@@ -100,8 +100,11 @@ class UserOut():
 
 class Communication():
 
-    def __init__(self):
-        pass
+    def __init__(self, comPort):
+        self.comPort = comPort
+
+    def getVersion(self):
+        return None
 
     def getState(self):
         #TODO: get real state
@@ -110,6 +113,36 @@ class Communication():
     def getIgnitionConfiguration(self):
         #TODO: get real configuration
         return Configuration()
+
+    def updateIgnitionConfiguration(self):
+        pass
+
+    def updateIgnitionCell(self, rpmLoadBin, advance):
+        pass
+
+    def writeIgnitionConfiguration(self):
+        pass
+
+    def getLoadCalibration(self):
+        return None
+
+    def udpdateLoadCalibration(self, data):
+        pass
+
+    def readLoadADC(self):
+        return None
+
+    def getAuxiliaryCalibration(self):
+        return None
+
+    def updateAuxiliaryCalibration(self):
+        pass
+
+    def getGlobalConfiguration(self):
+        return None
+
+    def updateGlobalConfiguration(self, cylinders, pipNoiseFilterLevel, crankingAdvance, triggerWheelOffset):
+        pass
 
 class State():
 

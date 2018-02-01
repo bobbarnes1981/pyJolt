@@ -31,7 +31,6 @@ class pyJolt(wx.Frame):
         self.aboutPyJolt = aboutpyjolt.AboutPyJolt(self)
 
         self.setOptions(self.cOptions.options)
-        self.coms = megajolt.Communication(self.option.comPort)
         if self.options.autoRead:
             self.readConfig()
 
@@ -337,7 +336,9 @@ class pyJolt(wx.Frame):
 
     def setOptions(self, options):
         self.options = options
-        #TODO: further logic and save
+        self.coms = megajolt.Communication(self.option.comPort)
+        self.gcOptions.setCommunication(self.coms)
+        #TODO: save?
 
 class Options():
 

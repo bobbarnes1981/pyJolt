@@ -59,8 +59,16 @@ class GlobalControllerOptions(wx.Dialog):
         self.SetSizer(sizer)
         sizer.Fit(self)
 
+    def setCommunication(self, coms):
+        self.coms = coms
+
+    def setOptions(self, options):
+        #TODO: use real values
+        self.coms.updateGlobalConfiguration(0, 0, 0, 0)
+
     def onReadButton(self, commandEvent):
-        pass
+        #TODO: update UI
+        self.coms.getGlobalConfiguration()
 
     def onWriteButton(self, commandEvent):
         pass
