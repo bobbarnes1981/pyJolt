@@ -2,6 +2,8 @@
 
 Status bar
 
+megajolt communication
+
 Draw runtime graphs
 
 Tools menu
