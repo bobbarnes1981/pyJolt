@@ -1,5 +1,7 @@
 #ToDo
 
+Status bar
+
 Draw runtime graphs
 
 Tools menu
@@ -19,8 +21,6 @@ Tools menu
         UI
         
         Logic
-
-Status bar
 
 config validation
 

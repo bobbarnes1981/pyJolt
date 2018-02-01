@@ -45,6 +45,8 @@ class pyJolt(wx.Frame):
         self.auxOptions = auxiliaryinputoptions.AuxiliaryInputOptions(self)
         self.aboutPyJolt = aboutpyjolt.AboutPyJolt(self)
 
+        self.setOptions(self.cOptions.options)
+
         self.notSaved = False
 
         self.filepath = None
@@ -233,7 +235,8 @@ class pyJolt(wx.Frame):
         self.showTuningPanel()
 
     def onConfiguratorOptions(self, menuEvent):
-        self.cOptions.ShowModal()
+        if self.cOptions.ShowModal() == wx.ID_OK:
+            self.setOptions(self.cOptions.options)
 
     def onControllerOptions(self, menuEvent):
         self.gcOptions.ShowModal()
@@ -303,3 +306,17 @@ class pyJolt(wx.Frame):
         self.tuningPanel.Close()
         self.runtimePanel.Close()
         self.Destroy()
+
+    def setOptions(self, options):
+        self.options = options
+        #TODO: further logic and save
+
+class Options():
+
+    def __init__(self, comPort, autoRead, action, loadType, normallyAspirated):
+        self.comPort = comPort
+        self.autoRead = autoRead
+        self.action = action
+        self.loadType = loadType
+        self.normallyAspirated = normallyAspirated
+

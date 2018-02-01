@@ -30,6 +30,7 @@ class ConfiguratorOptions(wx.Dialog):
 
         autoReadSizer = wx.BoxSizer(wx.HORIZONTAL)
         self.autoReadCheck = wx.CheckBox(self, wx.ID_ANY, label='Automatically read config at startup')
+        self.autoReadCheck.SetValue(True)
         autoReadSizer.Add(self.autoReadCheck, 0, wx.ALL, 5)
         sizer.Add(autoReadSizer, 0, wx.ALL|wx.EXPAND, 5)
 
@@ -46,9 +47,11 @@ class ConfiguratorOptions(wx.Dialog):
         loadSizer.Add(self.loadLabel, 0, wx.ALL, 5)
         loadSizer.Add(self.loadCombo, 0, wx.ALL, 5)
         sizer.Add(loadSizer, 0, wx.ALL|wx.EXPAND, 5)
+        self.Bind(wx.EVT_COMBOBOX, self.onLoadChanged, self.loadCombo)
 
         naSizer = wx.BoxSizer(wx.HORIZONTAL)
         self.naCheck = wx.CheckBox(self, wx.ID_ANY, label='Normally Aspirated Engine')
+        self.naCheck.SetValue(True)
         naSizer.Add(self.naCheck, 0, wx.ALL, 5)
         sizer.Add(naSizer, 0, wx.ALL|wx.EXPAND, 5)
 
@@ -64,8 +67,28 @@ class ConfiguratorOptions(wx.Dialog):
         self.SetSizer(sizer)
         sizer.Fit(self)
 
+        self.setOptions()
+
+    def setOptions(self):
+        self.options = Options(
+            self.comPortCombo.GetSelection(),
+            self.autoReadCheck.GetValue(),
+            self.actionCombo.GetSelection(),
+            self.loadCombo.GetSelection(),
+            self.naCheck.GetValue())
+
     def onOkButton(self, commandEvent):
-        pass
+        self.setOptions()
+        self.SetReturnCOde(wx._ID_OK)
+        self.Hide()
 
     def onCancelButton(self, commandEvent):
+        self.SetReturnCOde(wx._ID_CANCEL)
         self.Hide()
+
+    def loadChanged(self, commandEvent):
+        if self.loadCombo.GetSelection() == 1:
+            self.naCheck.Disable()
+        else:
+            self.naCheck.Enable()
+
