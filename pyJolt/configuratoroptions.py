@@ -23,7 +23,10 @@ class ConfiguratorOptions(wx.Dialog):
         
         comPortSizer = wx.BoxSizer(wx.HORIZONTAL)
         self.comPortLabel = wx.StaticText(self, wx.ID_ANY, label='COM Port')
-        self.comPortCombo = wx.ComboBox(self, wx.ID_ANY, value=self.comPorts[0], choices=self.comPorts, style=wx.CB_READONLY)
+        if self.comPorts:
+            self.comPortCombo = wx.ComboBox(self, wx.ID_ANY, value=self.comPorts[0], choices=self.comPorts, style=wx.CB_READONLY)
+        else:
+            self.comPortCombo = wx.ComboBox(self, wx.ID_ANY, choices=self.comPorts, style=wx.CB_READONLY)
         comPortSizer.Add(self.comPortLabel, 0, wx.ALL, 5)
         comPortSizer.Add(self.comPortCombo, 0, wx.ALL, 5)
         sizer.Add(comPortSizer, 0, wx.ALL|wx.EXPAND, 5)
@@ -71,7 +74,7 @@ class ConfiguratorOptions(wx.Dialog):
 
     def setOptions(self):
         self.options = Options(
-            self.comPortCombo.GetSelection(),
+            self.comPorts[self.comPortCombo.GetSelection()],
             self.autoReadCheck.GetValue(),
             self.actionCombo.GetSelection(),
             self.loadCombo.GetSelection(),

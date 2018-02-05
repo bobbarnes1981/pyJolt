@@ -1,3 +1,4 @@
+import serial
 
 class Configuration():
 
@@ -103,12 +104,12 @@ class Communication():
     def __init__(self, comPort):
         self.comPort = comPort
         self.baudRate = 38400
-        self.bytesize = 8
+        self.byteSize = 8
         self.parity = serial.PARITY_NONE
         self.stopBits = 1
 
     def makeRequest(self, char, length):
-        with serial.Serial(self.comPort, aelf.baudRate, bytesize=self.biteSize, parity=self.parity, stopbits=self.stopBits) as ser:
+        with serial.Serial(self.comPort, self.baudRate, bytesize=self.byteSize, parity=self.parity, stopbits=self.stopBits) as ser:
             ser.write(char)
             return ser.read(length)
 
