@@ -192,7 +192,7 @@ class State():
         self.userOut = [
             False, False, False, False
         ]
-        self.RevLimit = False
+        self.revLimit = False
         self.shiftLight = False
         self.config = 0
         self.aux = 0

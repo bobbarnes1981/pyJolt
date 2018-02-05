@@ -24,7 +24,7 @@ class pyJolt(wx.Frame):
 
         self.createTools()
 
-        self.statusBar = self.CreateStatusBar(1)
+        self.statusBar = self.CreateStatusBar(3)
 
         # TODO: load options?
 
@@ -72,13 +72,27 @@ class pyJolt(wx.Frame):
             try:
                 newState = self.coms.getState()
             except serial.SerialException, sException:
-                self.statusBar.SetStatusText(sException.strerror, 0)
+                self.statusBar.SetStatusText(sException.strerror, 1)
             if newState:
                 if self.state and not newState.config == self.state.config:
                     self.configSwitched()
                 self.state = newState
                 self.runtimePanel.setState(self.state)
+                self.setState(self.state.config, self.state.userOut[0], self.state.userOut[1], self.state.userOut[2], self.state.userOut[3], self.state.revLimit, self.state.shiftLight)
+            else:
+                self.setState(1, False, False, False, False, False, False)
             time.sleep(1)
+
+    def setState(self, config, user0, user1, user2, user3, revLimit, shiftLight):
+        self.statusBar.SetStatusText('Config {0} Active'.format(config), 0)
+        self.statusBar.SetStatusText('OUTPUT {0}{1}{2}{3} {4}{5}'.format(
+            user0,
+            user1,
+            user2,
+            user3,
+            revLimit,
+            shiftLight)
+        , 2)
 
     def readConfig(self):
         self.conf = self.coms.getIgnitionConfiguration()
