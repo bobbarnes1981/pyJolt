@@ -2,8 +2,6 @@
 
 Handle when there is no comport
 
-Status bar
-
 megajolt communication
 
 Draw runtime graphs
