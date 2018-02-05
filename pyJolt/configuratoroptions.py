@@ -82,12 +82,10 @@ class ConfiguratorOptions(wx.Dialog):
 
     def onOkButton(self, commandEvent):
         self.setOptions()
-        self.SetReturnCode(wx.ID_OK)
-        self.Hide()
+        self.EndModal(wx.ID_OK)
 
     def onCancelButton(self, commandEvent):
-        self.SetReturnCode(wx.ID_CANCEL)
-        self.Hide()
+        self.EndModal(wx.ID_CANCEL)
 
     def onLoadChanged(self, commandEvent):
         if self.loadCombo.GetSelection() == 1:

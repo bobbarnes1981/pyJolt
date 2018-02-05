@@ -1,4 +1,5 @@
 import wx
+import serial
 import time
 import configurationpanel
 import runtimepanel
@@ -23,7 +24,7 @@ class pyJolt(wx.Frame):
 
         self.createTools()
 
-        self.CreateStatusBar()
+        self.statusBar = self.CreateStatusBar(1)
 
         # TODO: load options?
 
@@ -67,11 +68,16 @@ class pyJolt(wx.Frame):
 
     def updateState(self):
         while(self.running):
-            newState = self.coms.getState()
-            if self.state and not newState.config == self.state.config:
-                self.configSwitched()
-            self.state = newState
-            self.runtimePanel.setState(self.state)
+            newState = None
+            try:
+                newState = self.coms.getState()
+            except serial.SerialException, sException:
+                self.statusBar.SetStatusText(sException.strerror, 0)
+            if newState:
+                if self.state and not newState.config == self.state.config:
+                    self.configSwitched()
+                self.state = newState
+                self.runtimePanel.setState(self.state)
             time.sleep(1)
 
     def readConfig(self):
