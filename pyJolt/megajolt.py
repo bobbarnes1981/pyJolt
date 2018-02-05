@@ -92,6 +92,11 @@ class Configuration():
         setattr(attr[num], prop, int(v))
         setattr(self, k, attr)
 
+class GlobalConfiguration():
+
+    def __init__(self):
+        pass
+
 class UserOut():
 
     def __init__(self, type, mode, value):
@@ -168,7 +173,10 @@ class Communication():
         pass
 
     def getGlobalConfiguration(self):
-        return None
+        res = self.makeRequest(b'g', 64)
+        config = GlobalConfiguration()
+        #TODO: load to object
+        return config
 
     def updateGlobalConfiguration(self, cylinders, pipNoiseFilterLevel, crankingAdvance, triggerWheelOffset):
         pass

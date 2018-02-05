@@ -1,4 +1,5 @@
 import wx
+import serial
 
 class GlobalControllerOptions(wx.Dialog):
 
@@ -62,16 +63,28 @@ class GlobalControllerOptions(wx.Dialog):
     def setCommunication(self, coms):
         self.coms = coms
 
+    def readOptions(self):
+        options = None
+        try:
+            options = self.coms.getGlobalConfiguration()
+        except serial.SerialException, sException:
+            wx.MessageDialog(self, sException.strerror, 'Error', wx.OK).ShowModal()
+        self.setOptions(options)
+
     def setOptions(self, options):
-        #TODO: use real values
-        self.coms.updateGlobalConfiguration(0, 0, 0, 0)
+        #TODO: set ui controls from options
+        pass
 
     def onReadButton(self, commandEvent):
-        #TODO: update UI
-        self.coms.getGlobalConfiguration()
+        self.readOptions()
 
     def onWriteButton(self, commandEvent):
-        pass
+        self.coms.updateGlobalConfiguration(0, 0, 0, 0)
 
     def onOkButton(self, commandEvent):
         self.Hide()
+
+    def ShowModal(self):
+        self.readOptions()
+        return super(GlobalControllerOptions, self).ShowModal()
+
