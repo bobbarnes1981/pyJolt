@@ -1,4 +1,5 @@
 import wx
+import serial
 
 class LoadAxisCalibration(wx.Dialog):
 

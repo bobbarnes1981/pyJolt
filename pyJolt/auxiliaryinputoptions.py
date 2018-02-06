@@ -1,4 +1,5 @@
 import wx
+import serial
 
 class AuxiliaryInputOptions(wx.Dialog):
 
