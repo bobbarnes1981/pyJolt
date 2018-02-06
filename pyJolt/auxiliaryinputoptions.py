@@ -9,29 +9,30 @@ class AuxiliaryInputOptions(wx.Dialog):
     def setCommunication(self, coms):
         self.coms = coms
 
-    def readOptions(self):
-        options = None
+    def readCalibration(self):
+        calibration = None
         try:
-            options = self.coms.getAuxiliaryInputOptions()
+            calibration = self.coms.getAuxiliaryCalibration()
         except serial.SerialException, sException:
             wx.MessageDialog(self, sException.strerror, 'Error', wx.OK).ShowModal()
-        self.setOptions(options)
+        if calibration:
+            self.setCalibration(calibration)
 
-    def setOptions(self, options):
-        #TODO: set ui controls from options
+    def setCalibration(self, calibration):
+        #TODO: set ui controls from calibration
         pass
 
 #    def onReadButton(self, commandEvent):
-#        self.readOptions()
+#        self.readCalibration()
 
 #    def onWriteButton(self, commandEvent):
-#        self.coms.updateAuxiliaryInputOptions()
+#        self.coms.updateAuxiliaryCalibration()
 
     def onOkButton(self, commandEvent):
         self.Hide()
 
     def ShowModal(self):
-        self.readOptions()
+        self.readCalibration()
         return super(AuxiliaryInputOptions, self).ShowModal()
 
 

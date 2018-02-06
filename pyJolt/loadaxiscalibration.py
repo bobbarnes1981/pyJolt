@@ -12,10 +12,11 @@ class LoadAxisCalibration(wx.Dialog):
     def readCalibration(self):
         calibration = None
         try:
-            calibration = self.coms.getLoadAxisCalibration()
+            calibration = self.coms.getLoadCalibration()
         except serial.SerialException, sException:
             wx.MessageDialog(self, sException.strerror, 'Error', wx.OK).ShowModal()
-        self.setCalibration(calibration)
+        if calibration:
+            self.setCalibration(calibration)
 
     def setCalibration(self, calibration):
         #TODO: set ui controls from calibration

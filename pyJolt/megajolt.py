@@ -145,41 +145,45 @@ class Communication():
         return state
 
     def getIgnitionConfiguration(self):
-        #TODO: get real configuration
-        return Configuration()
+        res = self.makeRequest(b'C', 150)
+        raise Exception('not implemented')
 
     def updateIgnitionConfiguration(self):
-        pass
+        raise Exception('not implemented')
 
     def updateIgnitionCell(self, rpmLoadBin, advance):
-        pass
+        raise Exception('not implemented')
 
     def writeIgnitionConfiguration(self):
-        pass
+        self.makeRequest(b'W', 0)
 
     def getLoadCalibration(self):
-        return None
+        self.makeRequest(b'l', 256)
+        raise Exception('not implemented')
 
     def udpdateLoadCalibration(self, data):
-        pass
+        raise Exception('not implemented')
 
     def readLoadADC(self):
-        return None
+        self.makeRequest(b'a', 1)
+        raise Exception('not implemented')
 
     def getAuxiliaryCalibration(self):
-        return None
+        self.makeRequest(b'x', 256)
+        raise Exception('not implemented')
 
     def updateAuxiliaryCalibration(self):
-        pass
+        raise Exception('not implemented')
 
     def getGlobalConfiguration(self):
         res = self.makeRequest(b'g', 64)
         config = GlobalConfiguration()
         #TODO: load to object
+        raise Exception('not implemented')
         return config
 
     def updateGlobalConfiguration(self, cylinders, pipNoiseFilterLevel, crankingAdvance, triggerWheelOffset):
-        pass
+        raise Exception('not implemented')
 
 class State():
 

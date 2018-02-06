@@ -95,8 +95,13 @@ class pyJolt(wx.Frame):
         , 2)
 
     def readConfig(self):
-        self.conf = self.coms.getIgnitionConfiguration()
-        self.setConfiguration(self.conf)
+        newConf = None
+        try:
+            newConf = self.conf = self.coms.getIgnitionConfiguration()
+        except serial.SerialException, sException:
+            self.statusBar.SetStatusText(sException.strerror, 1)
+        if newConf:
+            self.setConfiguration(self.conf)
 
     def configSwitched(self):
         if not self.options.action == 0:
