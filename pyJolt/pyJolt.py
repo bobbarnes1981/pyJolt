@@ -365,5 +365,7 @@ class pyJolt(wx.Frame):
         self.options = options
         self.coms = megajolt.Communication(self.options.comPort)
         self.gcOptions.setCommunication(self.coms)
+        self.auxOptions.setCommunication(self.coms)
+        self.laCalibration.setCommunication(self.coms)
         #TODO: save?
 
