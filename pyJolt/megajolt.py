@@ -91,11 +91,19 @@ class Configuration():
         attr = getattr(self, k)
         setattr(attr[num], prop, int(v))
         setattr(self, k, attr)
+    
+    @staticmethod
+    def FromBytes(data):
+        raise Exception('not implemented')
 
 class GlobalConfiguration():
 
     def __init__(self):
         pass
+
+    @staticmethod
+    def FromBytes(data):
+        raise Exception('not implemented')
 
 class UserOut():
 
@@ -123,30 +131,10 @@ class Communication():
         return '{0}.{1}.{2}'.format(res[0], res[1], res[2])
 
     def getState(self):
-        res = self.makeRequest(b'S', 9)
-        state = State()
-        state.advance = res[0]
-        state.rpm = (res[1]<<8)|(res[2]) # High byte | low byte
-        state.rpmBin = res[3]>>4 # high 4 bits
-        state.loadBin = res[3]|0x0F # low 4 bits
-        state.load = res[4]
-        state.userOut = [
-            (res[5]>>0)|0x01 == 0x01,
-            (res[5]>>1)|0x01 == 0x01,
-            (res[5]>>2)|0x01 == 0x01,
-            (res[5]>>3)|0x01 == 0x01,
-        ]
-        state.revLimit = (res[5]>>4)|0x01 == 0x01
-        state.shiftLight = (res[5]>>5)|0x01 == 0x01
-        state.config = 0 if (res[5]>>7)|0x01 == 0x01 else 1
-        state.aux = res[6]
-        state.correctionBin = res[7]
-        state.correctionDegrees = res[8]
-        return state
+        return State.FromBytes(self.makeRequest(b'S', 9))
 
     def getIgnitionConfiguration(self):
-        res = self.makeRequest(b'C', 150)
-        raise Exception('not implemented')
+        return Configuration.FromBytes(self.makeRequest(b'C', 150))
 
     def updateIgnitionConfiguration(self):
         raise Exception('not implemented')
@@ -165,22 +153,16 @@ class Communication():
         raise Exception('not implemented')
 
     def readLoadADC(self):
-        self.makeRequest(b'a', 1)
-        raise Exception('not implemented')
+        return LoadCalibration.FromBytes(self.makeRequest(b'a', 1))
 
     def getAuxiliaryCalibration(self):
-        self.makeRequest(b'x', 256)
-        raise Exception('not implemented')
+        return AuxiliaryCalibration.FromBytes(self.makeRequest(b'x', 256))
 
     def updateAuxiliaryCalibration(self):
         raise Exception('not implemented')
 
     def getGlobalConfiguration(self):
-        res = self.makeRequest(b'g', 64)
-        config = GlobalConfiguration()
-        #TODO: load to object
-        raise Exception('not implemented')
-        return config
+        return GlobalConfiguration.FromBytes(self.makeRequest(b'g', 64))
 
     def updateGlobalConfiguration(self, cylinders, pipNoiseFilterLevel, crankingAdvance, triggerWheelOffset):
         raise Exception('not implemented')
@@ -203,3 +185,24 @@ class State():
         self.correctionBin = 0
         self.correctionDegrees = 0
 
+    @staticmethod
+    def FromBytes(data):
+        state = State()
+        state.advance = data[0]
+        state.rpm = (data[1]<<8)|(data[2]) # High byte | low byte
+        state.rpmBin = data[3]>>4 # high 4 bits
+        state.loadBin = data[3]|0x0F # low 4 bits
+        state.load = data[4]
+        state.userOut = [
+            (data[5]>>0)|0x01 == 0x01,
+            (data[5]>>1)|0x01 == 0x01,
+            (data[5]>>2)|0x01 == 0x01,
+            (data[5]>>3)|0x01 == 0x01,
+        ]
+        state.revLimit = (data[5]>>4)|0x01 == 0x01
+        state.shiftLight = (data[5]>>5)|0x01 == 0x01
+        state.config = 0 if (data[5]>>7)|0x01 == 0x01 else 1
+        state.aux = data[6]
+        state.correctionBin = data[7]
+        state.correctionDegrees = data[8]
+        return state
